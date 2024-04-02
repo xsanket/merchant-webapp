@@ -1,0 +1,35 @@
+
+@import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'SF Pro Display', sans-serif;
+  background-color: #f7f7f7;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  color: #333333;
+}
+
+button {
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+input, textarea {
+  border-radius: 10px;
+}
+
+/* Add more styles as needed */
