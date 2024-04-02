@@ -8,6 +8,9 @@ const PartnerWithFoodApp = () => {
   const handleSubmit = (event) => {
     navigate('/become-a-seller')
   }
+  const handleLogin = (event) => {
+    navigate('/restaurant-login')
+  }
 
 
 
@@ -41,7 +44,9 @@ const PartnerWithFoodApp = () => {
             >
               Register your restaurant
             </button>
-            <button className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
+            <button className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded" 
+             onClick={handleLogin}
+             >
               Login to view your existing restaurants
             </button>
           </div>

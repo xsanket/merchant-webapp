@@ -1,79 +1,55 @@
-
 import React, { useState } from 'react';
-import axios from 'axios';
-import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import { restaurantRegistration } from '../apicalls/restaurantApiCall';
+import { useNavigate } from 'react-router-dom';
 
 const BecomeASeller = () => {
 
-  const [formData, setFormData] = useState({
+  const navigate = useNavigate();
+
+
+  const [restData, SetRestData] = useState({
     profilePicture: '',
     name: '',
+    email: '',
     phoneNumber: '',
     ownerName: '',
-    category: 'veg',
-    location: { lat: 0, lng: 0 },
+    category: '',
+    location: '',
+    latitude: '',
+    longitude: '',
     cuisine: '',
-    openDays: [],
     fassaiCode: '',
-    password: '',
-  });
+    password: ''
+  })
 
-  const { profilePicture, name, phoneNumber, ownerName, category, location, cuisine, openDays, fassaiCode, password } = formData;
-
-
+  const { profilePicture, name, email, phoneNumber, ownerName, category, location, latitude, longitude, cuisine, fassaiCode, password } = restData;
 
 
 
-  const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  // function to update data 
+  const handleInputChange = (event) => {
+    SetRestData({
+      ...restData,
+      [event.target.name]: event.target.value
+    });
+  }
 
-  const handleCheckboxChange = (e) => {
-    const { value, checked } = e.target;
-    let updatedOpenDays = [...formData.openDays];
 
-    if (checked) {
-      updatedOpenDays.push(value);
-    } else {
-      updatedOpenDays = updatedOpenDays.filter((day) => day !== value);
-    }
-
-    setFormData({ ...formData, openDays: updatedOpenDays });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  //function for handling submission of form data
+  const handleSubmit = async (event) => {
+    //to prevent page reloading
+    event.preventDefault();
+    //backend api Call using axios from frontend restaurantApiCall.js
     try {
-      const response = await axios.post('/api/restaurants/register', formData);
-      console.log(response.data);
-      // Redirect to Owner Dashboard or show a success message
-    } catch (err) {
-      console.error(err);
-      // Show an error message
+      const response = await restaurantRegistration(restData);
+      navigate('/api/restaurant-login');
+    } catch (error) {
+      console.log('Error in Registration', error);
+
     }
-  };
+  }
 
-  // const LocationMarker = () => {
-  //   const map = useMapEvents({
-  //     click(e) {
-  //       setFormData({ ...formData, location: e.latlng });
-  //     },
-  //   });
-  // const LocationMarker = () => {
-  //   const map = useMapEvents({
-  //     click: (e) => {
-  //       setFormData({ ...formData, location: e.latlng });
-  //     },
-  //   });
 
-  //   return (
-  //     <Marker
-  //       position={formData.location}
-  //       eventHandlers={map}
-  //     ></Marker>
-  //   );
-  // };
 
   return (
     <div className="bg-black text-white min-h-screen flex flex-col justify-center items-center relative"
@@ -132,22 +108,6 @@ const BecomeASeller = () => {
             </button>
           </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
           {/* profile picture */}
           <div className="mb-4">
             <label htmlFor="profilePicture" className="block font-bold mb-2 text-white">
@@ -172,26 +132,12 @@ const BecomeASeller = () => {
               type="text"
               id="name"
               name="name"
-              value={formData.name}
+              value={restData.name}
               onChange={handleInputChange}
               className="border border-gray-400 p-2 w-full"
             />
           </div>
-          {/* Location field (disabled for now) */}
-          {/* <div className="mb-4">
-        <label htmlFor="location" className="block font-bold mb-2 text-white">
-          Location
-        </label>
-        <input
-          type="text"
-          id="location"
-          name="location"
-          value={formData.location}
-          onChange={handleInputChange}
-          className="border border-gray-400 p-2 w-full"
-        /> 
-      </div> */}
-          {/* Submit button */}
+         
           <button
             type="submit"
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
