@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { restaurantLogin } from '../apicalls/restaurantApiCall.js';
 import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
+const RestLogin = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -85,4 +85,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default RestLogin;

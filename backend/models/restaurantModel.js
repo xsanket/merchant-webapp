@@ -1,11 +1,11 @@
 import mongoose from 'mongoose';
 import validator from 'validator';
 
-const validateCoordinates = (val) => {
-  // Regex to match decimal numbers with up to 15 decimal places
-  const regex = /^[-+]?([1-8]?\d(\.\d{1,15})?|90(\.0{1,15})?)$/;
-  return regex.test(val.toString());
-};
+// const validateCoordinates = (val) => {
+//   // Regex to match decimal numbers with up to 15 decimal places
+//   const regex = /^[-+]?([1-8]?\d(\.\d{1,15})?|90(\.0{1,15})?)$/;
+//   return regex.test(val.toString());
+// };
 
 const restaurantSchema = new mongoose.Schema({
   profilePicture: {
@@ -53,12 +53,12 @@ const restaurantSchema = new mongoose.Schema({
   latitude: {
     type: Number,
     required: true,
-    validate: [validateCoordinates, 'Invalid latitude value'],
+   
   },
   longitude: {
     type: Number,
     required: true,
-    validate: [validateCoordinates, 'Invalid longitude value'],
+    
   },
 
   cuisine: { 

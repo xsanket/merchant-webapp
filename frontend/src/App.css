@@ -14,6 +14,9 @@
     animation: App-logo-spin infinite 20s linear;
   }
 }
+.ant-form-item .ant-form-item-label > label {
+  color: white !important;
+}
 
 .App-header {
   background-color: #282c34;

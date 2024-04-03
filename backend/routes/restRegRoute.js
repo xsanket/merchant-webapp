@@ -8,7 +8,7 @@ const router = express.Router();
 router.post('/restaurant-registration', async (req, res) => {
   try {
     const { profilePicture, name, email, phoneNumber, ownerName, category, location, latitude, longitude, cuisine, fassaiCode, password } = req.body;
-    
+
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -16,19 +16,30 @@ router.post('/restaurant-registration', async (req, res) => {
     const restaurant = new restaurantModel({ profilePicture, name, email, phoneNumber, ownerName, category, location, latitude, longitude, cuisine, fassaiCode, password: hashedPassword });
 
     // user exist or not
-    const userExist = await restaurantModel.findOne({ email });
-    if (userExist) {
+    const emailExist = await restaurantModel.findOne({ email });
+    if (emailExist) {
       return res.status(400).json({
         success: false,
         message: "User already exists"
       });
     }
+    // phone  number is unique or not
+    const phoneNumberExist = await restaurantModel.findOne({ phoneNumber });
+    if (phoneNumberExist) {
+      return res.status(400).json({
+        success : false,
+        message : "Phone Number Already Exists"
+      })
+    }
+
+
 
     // Save into db
-    const savedRestaurant = await restaurant.save();
-
+    const savedRestaurant = await restaurant.save()
+    console.log("email", email)
     // success msg
     res.status(201).json({
+
       success: true,
       message: "Restaurant registered successfully",
       data: savedRestaurant
