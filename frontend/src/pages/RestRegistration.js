@@ -46,13 +46,6 @@ const RestRegistration = () => {
     });
   };
 
-  // const handleInputChange = (event) => {
-  //   const { name, value } = event.target;
-  //   setRestData({
-  //     ...restData,
-  //     [name]: value,
-  //   });
-  // };
   const handleInputChange = (event) => {
     if (event && event.target && event.target.name) {
       const { name, value } = event.target;

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { restaurantLogin } from '../apicalls/restaurantApiCall.js';
 import { useNavigate } from 'react-router-dom';
+import { message } from 'antd';
 
 const RestLogin = () => {
 
@@ -15,13 +16,23 @@ const RestLogin = () => {
     e.preventDefault();
     try {
       const response = await restaurantLogin({ email, password });
+      console.log(response)
       if (response.success) {
         localStorage.setItem('token', response.token);
+        message.success("Logged in successfully!");
         navigate('/restaurant-dashboard');
-      } else {
-        setError(response.error);
       }
-    } catch (err) {
+      else if (response.error === 'User not found') {
+        message.error("User not found");
+      }
+      else if (response.error === 'Invalid password') {
+        message.error("Invalid email or password");
+      }
+      else {
+        message.error(response.message || 'Login failed. Please try again.');
+      }
+    }
+    catch (err) {
       setError('Internal server error');
     }
   };
@@ -40,7 +51,7 @@ const RestLogin = () => {
           <span className="text-sm font-light">for business</span>
         </div>
 
-    
+
         <form onSubmit={handleSubmit} className="bg-black/75 rounded-lg p-8 max-w-4xl mx-auto">
           <div className="mb-4">
             <label htmlFor="name" className="block font-bold mb-2 ml-2 text-white">

@@ -4,6 +4,7 @@ import cors from 'cors';
 import dbConfig from './config/dbConfig.js'
 import restRegistration from './routes/restRegRoute.js';
 import restLogin from './routes/restLoginRoute.js'
+import restProfile from './routes/restProfile.js';
 
 dotenv.config();
 const app = express();
@@ -23,6 +24,7 @@ dbConfig.dbConnection();
 
 app.use('/api', restRegistration);
 app.use('/api', restLogin)
+app.use('/api', restProfile)
 
 
 

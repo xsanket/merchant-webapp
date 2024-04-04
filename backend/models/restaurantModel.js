@@ -1,12 +1,6 @@
 import mongoose from 'mongoose';
 import validator from 'validator';
 
-// const validateCoordinates = (val) => {
-//   // Regex to match decimal numbers with up to 15 decimal places
-//   const regex = /^[-+]?([1-8]?\d(\.\d{1,15})?|90(\.0{1,15})?)$/;
-//   return regex.test(val.toString());
-// };
-
 const restaurantSchema = new mongoose.Schema({
   profilePicture: {
     type: String,
@@ -20,11 +14,11 @@ const restaurantSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    validate(value){
-      if (!validator.isEmail(value)){
-        throw new console.error("Invalid Email");
-      }
-    }
+    // validate(value){
+    //   if (!validator.isEmail(value)){
+    //     throw new console.error("Invalid Email");
+    //   }
+    // }
   },
 
   phoneNumber: {
@@ -69,7 +63,7 @@ const restaurantSchema = new mongoose.Schema({
   fassaiCode: { 
     type: String, 
     required: true, 
-    unique: true 
+    
   },
 
   password: { 

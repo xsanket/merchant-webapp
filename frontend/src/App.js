@@ -5,6 +5,10 @@ import PartnerWithFoodApp from './pages/PartnerWithFoodApp.js';
 import RestDashboard from './pages/RestDashboard.js';
 import RestRegistration from './pages/RestRegistration.js';
 import RestLogin from './pages/RestLogin.js';
+import RestaurantDashboard from './pages/RestaurantDashboard .js';
+
+
+
 
 const App = () => {
   return (
@@ -13,8 +17,10 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/become-a-seller" element={<RestRegistration />} />
         <Route path="/PartnerWithFoodApp" element={<PartnerWithFoodApp />} />
-        <Route path="/restaurant-login" element={<RestLogin/>} />
+        <Route path="/restaurant-login" element={<RestLogin />} />
         <Route path="/restaurant-dashboard" element={<RestDashboard />} />
+        <Route path="/RestaurantDashboard" element={<RestaurantDashboard />} />
+
 
       </Routes>
     </Router>
