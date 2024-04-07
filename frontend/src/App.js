@@ -7,6 +7,13 @@ import RestRegistration from './pages/RestRegistration.js';
 import RestLogin from './pages/RestLogin.js';
 import RestaurantDashboard from './pages/RestaurantDashboard .js';
 
+// import dotenv from 'dotenv';
+// dotenv.config();
+
+
+//dotenv.config('../.env')
+
+
 
 
 

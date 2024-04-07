@@ -4,6 +4,7 @@ import { Breadcrumb, Layout, Menu, Image, theme } from 'antd';
 import { getRestaurant } from '../apicalls/restaurantApiCall.js';
 
 const { Header, Content, Sider } = Layout;
+const IMAGE_URL='http://localhost:5000/uploads/';
 const items1 = ['1', '2', '3'].map((key) => ({
   key,
   label: `nav ${key}`,
@@ -24,7 +25,11 @@ const items2 = [UserOutlined, LaptopOutlined, NotificationOutlined].map((icon, i
   };
 });
 
+
+
 const RestProfile = () => {
+  
+  const [imagePath, setImagePath] = useState('');
   const [restaurant, setRestaurant] = useState(null);
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -33,11 +38,16 @@ const RestProfile = () => {
   useEffect(() => {
     const fetchRestaurantProfile = async () => {
       try {
+
+        
+
+
         const restaurantData = await getRestaurant();
         console.log('Restaurant Data:', restaurantData);
 
         // Check if the data object exists and contains profilePicture and name
         if (restaurantData && restaurantData.data) {
+          setImagePath(`${IMAGE_URL}${restaurantData.data.profilePicture}`);
           setRestaurant(restaurantData.data);
         } else {
           console.error('Invalid restaurant data:', restaurantData);
@@ -119,12 +129,11 @@ const RestProfile = () => {
             Content
             {restaurant && (
               <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center' }}>
-                <Image
-                  width={200}
-                  src={restaurant.profilePicture}
-                />
-                <img src={restaurant.profilePicture} style={{ marginRight: 8 }} />
+              
+                 
+                <img src={imagePath} style={{ marginRight: 8 }} alt="Profile" />
                 <span>{restaurant.name}</span>
+                <span>{restaurant.ownerName}</span>
               </div>
             )}
             <div>

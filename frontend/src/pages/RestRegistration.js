@@ -34,9 +34,12 @@ const RestRegistration = () => {
   ];
 
   const [category, setCategory] = useState('');
-
   const handleCategoryChange = (e) => {
-    setCategory(e.target.value);
+    const { value } = e.target;
+    setRestData({
+      ...restData,
+      category: value,
+    });
   };
 
   const handleSelectChange = (name, value) => {
@@ -46,15 +49,13 @@ const RestRegistration = () => {
     });
   };
 
-  const handleInputChange = (event) => {
-    if (event && event.target && event.target.name) {
-      const { name, value } = event.target;
-      setRestData({
-        ...restData,
-        [name]: value,
-      });
-    }
+  const handleInputChange = (name, value) => {
+    setRestData({
+      ...restData,
+      [name]: value,
+    });
   };
+
 
   const isValidLatitude = (rule, value) => {
     const latitude = parseFloat(value);
@@ -68,6 +69,16 @@ const RestRegistration = () => {
 
     return Promise.resolve();
   };
+  const handleLatitudeChange = (value) => {
+    setRestData({
+      ...restData,
+      latitude: value,
+    });
+  };
+
+
+
+
 
   const isValidLongitude = (rule, value) => {
     const longitude = parseFloat(value);
@@ -78,35 +89,82 @@ const RestRegistration = () => {
       return Promise.reject('longitude must be between -180 and 180.');
     }
     return Promise.resolve();
-
+  };
+  const handleLongitudeChange = (value) => {
+    setRestData({
+      ...restData,
+      longitude: value,
+    });
   };
 
+
+
+
+
+  const uploadProfilePicture = (e) => {
+    console.log(e.target.files[0]);
+    setRestData({
+      ...restData,
+      profilePicture: e.target.files[0]
+
+    });
+  }
 
 
   const handleSubmit = async () => {
     try {
-      const values = await form.validateFields();
-      const response = await restaurantRegistration(values);
+      console.log("heloooo");
+      console.log('Category:', restData.category);
+      console.log('Cuisine:', restData.cuisine);
+      console.log('Rest Data:', JSON.stringify(restData));
+      //console.log('Submitting Form Data:', restData);
+      const formData = new FormData();
+
+
+      formData.append('profilePicture', restData.profilePicture);
+      formData.append('name', restData.name);
+      formData.append('email', restData.email);
+      formData.append('phoneNumber', restData.phoneNumber);
+      formData.append('ownerName', restData.ownerName);
+      formData.append('category', restData.category);
+      formData.append('location', restData.location);
+      formData.append('latitude', restData.latitude);
+      formData.append('longitude', restData.longitude);
+      formData.append('cuisine', restData.cuisine);
+      formData.append('fassaiCode', restData.fassaiCode);
+      formData.append('password', restData.password);
+
+      console.log('Category:', restData.category);
+      console.log('Cuisine:', restData.cuisine);
+      console.log('Rest Data:', JSON.stringify(restData));
+
+
+
+      const response = await restaurantRegistration(formData);
+      console.log('API Response:', response); // Log the API response
+
       if (response.success) {
         message.success('Registration successful. Please login.');
         navigate('/restaurant-login');
-      }
-      else if (response.message === 'User already exists') {
+      } else if (response.message === 'User already exists') {
         message.error('Email already exists. please login');
-      }
-      else if (response.message === 'Phone Number Already Exists') {
+      } else if (response.message === 'Phone Number Already Exists') {
         message.error('Phone Number Already Exists. please login');
       }
+      else if (response.message === 'fassaiCode Already Exists') {
+        message.error('fassaiCode Already Exists');
+      }
+
+
       else {
         message.error(response.message || 'Registration failed. Please try again.');
       }
-    }
-
-    catch (error) {
+    } catch (error) {
       console.log('Error in Registration', error);
       message.error('Registration failed. Please try again.');
     }
   };
+
 
 
   const newLocal = "w-full md:w-1/2 px-2 mb-4 flex justify-center items-center mx-auto ";
@@ -128,11 +186,11 @@ const RestRegistration = () => {
           {/* Category Buttons */}
           <div className="flex justify-center mb-4">
             <Form.Item name="category" rules={[{ required: true, message: 'Please select a category.' }]}>
-              <Radio.Group onChange={handleCategoryChange} value={category} optionType="button" buttonStyle="solid">
-                <Radio.Button value="veg" style={{ backgroundColor: category === 'veg' ? 'green' : '', color: category === 'veg' ? 'white' : '' }}>
+              <Radio.Group onChange={handleCategoryChange} value={restData.category} optionType="button" buttonStyle="solid">
+                <Radio.Button value="veg" style={{ backgroundColor: restData.category === 'veg' ? 'green' : '', color: category === 'veg' ? 'white' : '' }}>
                   Veg
                 </Radio.Button>
-                <Radio.Button value="non-veg" style={{ backgroundColor: category === 'non-veg' ? 'red' : '', color: category === 'non-veg' ? 'white' : '' }}>
+                <Radio.Button value="non-veg" style={{ backgroundColor: restData.category === 'non-veg' ? 'red' : '', color: category === 'non-veg' ? 'white' : '' }}>
                   Non-Veg
                 </Radio.Button>
               </Radio.Group>
@@ -147,7 +205,7 @@ const RestRegistration = () => {
               <Form.Item name="profilePicture" label="Restaurant Profile Picture"
                 labelCol={{ span: 24 }} wrapperCol={{ span: 24 }} labelStyle={{ color: 'white' }}
                 rules={[{ required: true, message: 'Please upload your hotel profile picture.' }]}>
-                <Input type="file" className="border border-gray-400 p-2 w-full" onChange={handleInputChange} />
+                <Input type="file" className="border border-gray-400 p-2 w-full" onChange={uploadProfilePicture} />
               </Form.Item>
             </div>
 
@@ -183,7 +241,8 @@ const RestRegistration = () => {
               <Form.Item name="name" label="Restaurant Name"
                 labelCol={{ span: 24 }} wrapperCol={{ span: 24 }} style={{ color: 'white' }}
                 rules={[{ required: true, message: 'Please enter your Restaurant name.' }]}>
-                <Input type="text" className="border border-gray-400 p-2 w-full" onChange={handleInputChange} />
+                <Input type="text" className="border border-gray-400 p-2 w-full"
+                  onChange={(e) => handleInputChange('name', e.target.value)} />
               </Form.Item>
             </div>
 
@@ -192,7 +251,8 @@ const RestRegistration = () => {
               <Form.Item name="email" label="Restaurant Email"
                 labelCol={{ span: 24 }} wrapperCol={{ span: 24 }} style={{ color: 'white' }}
                 rules={[{ required: true, message: 'Please enter your email.' }]}>
-                <Input type="email" className="border border-gray-400 p-2 w-full" onChange={handleInputChange} />
+                <Input type="email" className="border border-gray-400 p-2 w-full"
+                  onChange={(e) => handleInputChange('email', e.target.value)} />
               </Form.Item>
             </div>
 
@@ -201,7 +261,8 @@ const RestRegistration = () => {
               <Form.Item name="phoneNumber" label="Restaurant Phone Number"
                 labelCol={{ span: 24 }} wrapperCol={{ span: 24 }} style={{ color: 'white' }}
                 rules={[{ required: true, message: 'Please enter your phone number.' }, { pattern: /^\d{10}$/, message: 'Phone number must be 10 digits.' }]}>
-                <Input type="number" className="border border-gray-400 p-2 w-full" onChange={handleInputChange} />
+                <Input type="number" className="border border-gray-400 p-2 w-full"
+                  onChange={(e) => handleInputChange('phoneNumber', e.target.value)} />
               </Form.Item>
             </div>
 
@@ -210,7 +271,8 @@ const RestRegistration = () => {
               <Form.Item name="ownerName" label="Restaurant Owner Name"
                 labelCol={{ span: 24 }} wrapperCol={{ span: 24 }} style={{ color: 'white' }}
                 rules={[{ required: true, message: 'Please enter the owner\'s name.' }]}>
-                <Input type="text" className="border border-gray-400 p-2 w-full" onChange={handleInputChange} />
+                <Input type="text" className="border border-gray-400 p-2 w-full"
+                  onChange={(e) => handleInputChange('ownerName', e.target.value)} />
               </Form.Item>
             </div>
 
@@ -222,7 +284,7 @@ const RestRegistration = () => {
                 labelCol={{ span: 24 }} wrapperCol={{ span: 24 }} style={{ color: 'white' }}
                 rules={[{ required: true, message: 'Please enter the latitude.' }, { validator: isValidLatitude }]}>
                 <Input type="number" className="border border-gray-400 p-2 w-full"
-                  onChange={handleInputChange} />
+                  onChange={(e) => handleLatitudeChange(e.target.value)} />
               </Form.Item>
             </div>
 
@@ -232,7 +294,7 @@ const RestRegistration = () => {
                 labelCol={{ span: 24 }} wrapperCol={{ span: 24 }} style={{ color: 'white' }}
                 rules={[{ required: true, message: 'Please enter the longitude.' }, { validator: isValidLongitude }]}>
                 <Input type="number" className="border border-gray-400 p-2 w-full"
-                  onChange={handleInputChange} />
+                  onChange={(e) => handleLongitudeChange(e.target.value)} />
               </Form.Item>
             </div>
 
@@ -245,7 +307,7 @@ const RestRegistration = () => {
               <Form.Item name="location" label="Restaurant Address"
                 labelCol={{ span: 24 }} wrapperCol={{ span: 24 }} style={{ color: 'white' }}
                 rules={[{ required: true, message: 'Please enter the address.' }]}>
-                <Input type="text" className="border border-gray-400 p-2 w-full" onChange={handleInputChange} />
+                <Input type="text" className="border border-gray-400 p-2 w-full" onChange={(e) => handleInputChange('location', e.target.value)} />
               </Form.Item>
             </div>
 
@@ -258,7 +320,7 @@ const RestRegistration = () => {
                 labelCol={{ span: 24 }} wrapperCol={{ span: 24 }} style={{ color: 'white' }}
                 rules={[{ required: true, message: 'Please enter the FSSAI code.' },
                 { len: 14, message: 'FSSAI code must be exactly 14 digits.' }]}>
-                <Input type="text" className="border border-gray-400 p-2 w-full" onChange={handleInputChange} />
+                <Input type="text" className="border border-gray-400 p-2 w-full" onChange={(e) => handleInputChange('fassaiCode', e.target.value)} />
               </Form.Item>
             </div>
 
@@ -270,7 +332,7 @@ const RestRegistration = () => {
                 { min: 8, message: 'Password must be at least 8 characters.' },
                 { max: 20, message: 'Password cannot exceed 20 characters.' },
                 { pattern: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, message: 'Password must contain at least one letter, one number, and one special character.' }]}>
-                <Input.Password className="border border-gray-400 p-2 w-full" onChange={handleInputChange} />
+                <Input.Password className="border border-gray-400 p-2 w-full" onChange={(e) => handleInputChange('password', e.target.value)} />
               </Form.Item>
             </div>
           </div>

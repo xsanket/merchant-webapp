@@ -10,6 +10,7 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
 
+
 // Middleware
 app.use(express.json());
 app.use(cors());
@@ -18,6 +19,7 @@ app.use(cors());
 dbConfig.dbConnection();
 
 
+app.use('/uploads', express.static('uploads')); // for images to be served
 
 
 // Routes

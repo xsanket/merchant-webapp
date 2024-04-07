@@ -1,14 +1,16 @@
 import express from 'express';
 import bcrypt from 'bcryptjs'
 import restaurantModel from '../models/restaurantModel.js';
+import upload from '../middlewares/multerMiddleware.js'
 
 
 const router = express.Router();
 
-router.post('/restaurant-registration', async (req, res) => {
+router.post('/restaurant-registration', upload.single('profilePicture'), async (req, res) => {
   try {
-    const { profilePicture, name, email, phoneNumber, ownerName, category, location, latitude, longitude, cuisine, fassaiCode, password } = req.body;
-
+    const profilePicture = (req.file) ? req.file.filename : null;
+    const { name, email, phoneNumber, ownerName, category, location, latitude, longitude, cuisine, fassaiCode, password } = req.body;
+    console.log("email is: ", email)
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -27,17 +29,24 @@ router.post('/restaurant-registration', async (req, res) => {
     const phoneNumberExist = await restaurantModel.findOne({ phoneNumber });
     if (phoneNumberExist) {
       return res.status(400).json({
-        success : false,
-        message : "Phone Number Already Exists"
+        success: false,
+        message: "Phone Number Already Exists"
       })
     }
-
+    // fsssai  code is unique or not
+    const fssaiCodeExist = await restaurantModel.findOne({ fassaiCode });
+    if (fssaiCodeExist) {
+      return res.status(400).json({
+        success: false,
+        message: "fassaiCode Already Exists"
+      })
+    }
 
 
     // Save into db
     const savedRestaurant = await restaurant.save()
     console.log("email", email)
-    // success msg
+
     res.status(201).json({
 
       success: true,
