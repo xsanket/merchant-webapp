@@ -11,7 +11,7 @@ const authMiddleware = (req, res, next) => {
     if (!authorizationHeader || !authorizationHeader.startsWith("Bearer ")) {
       return res.status(401).send({
         success: false,
-        message: "Unauthorized: Missing or invalid token",
+        //message: "Unauthorized: Missing or invalid token",
       });
     }
 
@@ -22,7 +22,7 @@ const authMiddleware = (req, res, next) => {
   } catch (error) {
     return res.status(401).send({
       success: false,
-      message: "Unauthorized: Invalid token",
+      //message: "Unauthorized: Invalid token",
     });
   }
 };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { restaurantLogin } from '../apicalls/restaurantApiCall.js';
 import { useNavigate } from 'react-router-dom';
 import { message } from 'antd';
@@ -36,6 +36,14 @@ const RestLogin = () => {
       setError('Internal server error');
     }
   };
+
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      navigate("/restaurant-dashboard")
+      message.success( "You are already logged in." );
+    }
+  }, []);
+
 
   return (
     <div className="bg-black text-black min-h-screen flex flex-col justify-center items-center relative"

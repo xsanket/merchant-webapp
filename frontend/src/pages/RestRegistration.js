@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { restaurantRegistration } from '../apicalls/restaurantApiCall';
 import { useNavigate } from 'react-router-dom';
 import { message, Form, Input, Button, Select, Radio, InputNumber } from 'antd';
@@ -164,6 +164,12 @@ const RestRegistration = () => {
       message.error('Registration failed. Please try again.');
     }
   };
+
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      navigate("/restaurant-dashboard")
+    }
+  }, []);
 
 
 
