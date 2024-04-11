@@ -5,6 +5,7 @@ import dbConfig from './config/dbConfig.js'
 import restRegistration from './routes/restRegRoute.js';
 import restLogin from './routes/restLoginRoute.js'
 import restProfile from './routes/restProfile.js';
+import orderRouter from './routes/orderRoute.js'
 
 dotenv.config();
 const app = express();
@@ -27,6 +28,7 @@ app.use('/uploads', express.static('uploads')); // for images to be served
 app.use('/api', restRegistration);
 app.use('/api', restLogin)
 app.use('/api', restProfile)
+app.use('/api', orderRouter)
 
 
 

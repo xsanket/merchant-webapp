@@ -17,6 +17,12 @@ export const getRestaurant = async () => {
 }
 
 
+export const getOrderDashboard = async () => {
+  const response = axiosInstance("get", "/api/orders/pending");
+  return response;
+}
+
+
 
 
 

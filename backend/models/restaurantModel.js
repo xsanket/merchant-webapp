@@ -14,11 +14,7 @@ const restaurantSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    // validate(value){
-    //   if (!validator.isEmail(value)){
-    //     throw new console.error("Invalid Email");
-    //   }
-    // }
+    
   },
 
   phoneNumber: {

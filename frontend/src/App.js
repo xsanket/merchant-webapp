@@ -5,8 +5,9 @@ import PartnerWithFoodApp from './pages/PartnerWithFoodApp.js';
 import RestDashboard from './pages/RestDashboard.js';
 import RestRegistration from './pages/RestRegistration.js';
 import RestLogin from './pages/RestLogin.js';
-import RestaurantDashboard from './pages/RestaurantDashboard .js';
 import ProtectedPages from './components/ProtectedPages.js';
+
+import Dashboard from './pages/orderDashboard.js';
 
 // import dotenv from 'dotenv';
 // dotenv.config();
@@ -26,9 +27,8 @@ const App = () => {
         <Route path="/become-a-seller" element={<RestRegistration />} />
         <Route path="/PartnerWithFoodApp" element={<PartnerWithFoodApp />} />
         <Route path="/restaurant-login" element={<RestLogin />} />
+        <Route path="/order-dashboard" element={<Dashboard />} />
         <Route path="/restaurant-dashboard" element={<ProtectedPages><RestDashboard /></ProtectedPages>} />
-
-
 
       </Routes>
     </Router>

@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
-import { Breadcrumb, Layout, Menu, Image, theme } from 'antd';
+import { Button, Tabs, Modal, Layout, Menu, Image, theme } from 'antd';
 import { getRestaurant } from '../apicalls/restaurantApiCall.js';
+import { useNavigate } from 'react-router-dom';
+import LiveOrder from '../components/orders/LiveOrder.js';
+import Home from '../components/orders/Home.js';
+import { TbLogout2 } from "react-icons/tb";
+import { LogoutOutlined } from '@ant-design/icons';
+
 
 const { Header, Content, Sider } = Layout;
-const IMAGE_URL='http://localhost:5000/uploads/';
-const items1 = ['1', '2', '3'].map((key) => ({
-  key,
-  label: `nav ${key}`,
-}));
+const { TabPane } = Tabs;
+
+const IMAGE_URL = 'http://localhost:5000/uploads/';
+
 const items2 = [UserOutlined, LaptopOutlined, NotificationOutlined].map((icon, index) => {
   const key = String(index + 1);
   return {
@@ -25,27 +30,19 @@ const items2 = [UserOutlined, LaptopOutlined, NotificationOutlined].map((icon, i
   };
 });
 
-
-
 const RestProfile = () => {
-  
   const [imagePath, setImagePath] = useState('');
   const [restaurant, setRestaurant] = useState(null);
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
+  const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('1'); // State to track active tab
+  const { token: { colorBgContainer, borderRadiusLG } } = theme.useToken();
 
   useEffect(() => {
     const fetchRestaurantProfile = async () => {
       try {
-
-        
-
-
         const restaurantData = await getRestaurant();
         console.log('Restaurant Data:', restaurantData);
-
-        // Check if the data object exists and contains profilePicture and name
         if (restaurantData && restaurantData.data) {
           setImagePath(`${IMAGE_URL}${restaurantData.data.profilePicture}`);
           setRestaurant(restaurantData.data);
@@ -61,89 +58,96 @@ const RestProfile = () => {
         }
       }
     };
-
     fetchRestaurantProfile();
   }, []);
+
+  const handleViewOrders = (status) => {
+    navigate(`/orders/${status}`);
+  };
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleTabChange = (key) => {
+    setActiveTab(key);
+  };
+
+  const TbLogout2 = ({ className, onClick }) => (
+    <div className={`flex  cursor-pointer ${className}`} onClick={onClick}>
+      <LogoutOutlined />
+    </div>
+  );
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/');
+  }
+
   return (
     <Layout>
-      <Header
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-        }}
-      >
-        <div className="demo-logo" />
-        <Menu
-          theme="dark"
-          mode="horizontal"
-          defaultSelectedKeys={['2']}
-          items={items1}
-          style={{
-            flex: 1,
-            minWidth: 0,
-          }}
-        />
 
-      </Header>
       <Layout>
-        <Sider
-          width={200}
-          style={{
-            background: colorBgContainer,
-          }}
-        >
-          <Menu
-            mode="inline"
-            defaultSelectedKeys={['1']}
-            defaultOpenKeys={['sub1']}
-            style={{
-              height: '100%',
-              borderRight: 0,
-            }}
-            items={items2}
-          />
-        </Sider>
-        <Layout
-          style={{
-            padding: '0 24px 24px',
-          }}
-        >
-          <Breadcrumb
-            style={{
-              margin: '16px 0',
-            }}
-          >
-            <Breadcrumb.Item>Home</Breadcrumb.Item>
-            <Breadcrumb.Item>List</Breadcrumb.Item>
-            <Breadcrumb.Item>App</Breadcrumb.Item>
-          </Breadcrumb>
-          <Content
-            style={{
-              padding: 24,
-              margin: 0,
-              minHeight: 280,
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG,
-            }}
-          >
-            Content
-            {restaurant && (
-              <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center' }}>
-              
-                 
-                <img src={imagePath} style={{ marginRight: 8 }} alt="Profile" />
-                <span>{restaurant.name}</span>
-                <span>{restaurant.ownerName}</span>
-              </div>
-            )}
-            <div>
-
-            </div>
+        <Header className="text-white" style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div></div>
+          <TbLogout2 className='' onClick={handleLogout} style={{ fontSize: '40px' }} />
+        </Header>
 
 
-          </Content>
-        </Layout>
       </Layout>
+
+
+      <Layout>
+        <Sider width={200} style={{ background: colorBgContainer }} className="bg-gray-200 h-screen flex flex-col justify-between overflow-y-auto">
+          {restaurant && (
+            <div className="flex flex-col items-center">
+              <div className="mt-0">
+                <Image width={200} src={imagePath} />
+              </div>
+              <div className="mt-4">
+                <span className="font-bold">{restaurant.name}</span>
+              </div>
+              <div className="mt-2">
+                <span>{restaurant.location}</span>
+              </div>
+            </div>
+          )}
+
+        </Sider>
+
+
+        <Content
+          style={{
+            padding: '0 24px',
+            minHeight: 280,
+          }}
+        >
+          <Tabs className="flex justify-center content-center" activeKey={activeTab} onChange={handleTabChange}>
+            <>
+              <TabPane tab="Home" key="1">
+                <Home />
+              </TabPane>
+              <TabPane tab="Live Orders" key="2">
+                <LiveOrder />
+              </TabPane>
+              <TabPane tab="Pending Orders" key="3"></TabPane>
+              <TabPane tab="Completed Orders" key="4"></TabPane>
+            </>
+          </Tabs>
+
+        </Content>
+
+
+      </Layout>
+
     </Layout>
   );
 };
