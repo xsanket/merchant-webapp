@@ -54,6 +54,34 @@ router.get('/order', authMiddleware, async (req, res) => {
 });
 
 
+
+//to cancel and delete the order entry
+router.delete('/order/:orderId', authMiddleware, async (req, res) => {
+    try {
+      const { orderId } = req.params;
+      const deletedOrder = await orderModel.deleteOne({ orderId: orderId });
+      if (deletedOrder.deletedCount === 1) {
+        return res.status(200).send({
+          success: true,
+          message: "Order deleted successfully",
+        });
+      } else {
+        return res.status(404).send({
+          success: false,
+          message: "Order not found",
+        });
+      }
+    } catch (error) {
+      return res.status(500).send({
+        success: false,
+        message: error.message,
+      });
+    }
+  });
+
+
+
+
 export default router;
 
 

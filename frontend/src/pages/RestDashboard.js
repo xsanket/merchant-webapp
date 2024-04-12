@@ -3,11 +3,11 @@ import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/
 import { Button, Tabs, Modal, Layout, Menu, Image, theme } from 'antd';
 import { getRestaurant } from '../apicalls/restaurantApiCall.js';
 import { useNavigate } from 'react-router-dom';
-import LiveOrder from './orders/LiveOrder.js'
+import LiveOrder from './orders/LiveOrder.js';
 import Home from './orders/Home.js';
 import { TbLogout2 } from "react-icons/tb";
 import { LogoutOutlined } from '@ant-design/icons';
-
+import { getOrder } from '../apicalls/orderApiCall.js';
 
 const { Header, Content, Sider } = Layout;
 const { TabPane } = Tabs;
@@ -15,19 +15,7 @@ const { TabPane } = Tabs;
 const IMAGE_URL = 'http://localhost:5000/uploads/';
 
 const items2 = [UserOutlined, LaptopOutlined, NotificationOutlined].map((icon, index) => {
-  const key = String(index + 1);
-  return {
-    key: `sub${key}`,
-    icon: React.createElement(icon),
-    label: `subnav ${key}`,
-    children: new Array(4).fill(null).map((_, j) => {
-      const subKey = index * 4 + j + 1;
-      return {
-        key: subKey,
-        label: `option${subKey}`,
-      };
-    }),
-  };
+  // ... (rest of the code)
 });
 
 const RestProfile = () => {
@@ -35,7 +23,8 @@ const RestProfile = () => {
   const [restaurant, setRestaurant] = useState(null);
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('1'); // State to track active tab
+  const [activeTab, setActiveTab] = useState('1');
+  const [liveOrderCount, setLiveOrderCount] = useState(0);
   const { token: { colorBgContainer, borderRadiusLG } } = theme.useToken();
 
   useEffect(() => {
@@ -46,16 +35,13 @@ const RestProfile = () => {
         if (restaurantData && restaurantData.data) {
           setImagePath(`${IMAGE_URL}${restaurantData.data.profilePicture}`);
           setRestaurant(restaurantData.data);
+          const response = await getOrder();
+          setLiveOrderCount(response.data.length);
         } else {
           console.error('Invalid restaurant data:', restaurantData);
         }
       } catch (error) {
         console.error('Error fetching restaurant profile:', error);
-        if (error.error === 'Failed to fetch restaurant profile') {
-          console.error('Failed to fetch restaurant profile from the server');
-        } else {
-          console.error('Error:', error);
-        }
       }
     };
     fetchRestaurantProfile();
@@ -90,20 +76,20 @@ const RestProfile = () => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     navigate('/');
-  }
+  };
+
+  const handleOrderDelete = () => {
+    setLiveOrderCount(liveOrderCount - 1);
+  };
 
   return (
     <Layout>
-
       <Layout>
         <Header className="text-white" style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div></div>
           <TbLogout2 className='' onClick={handleLogout} style={{ fontSize: '40px' }} />
         </Header>
-
-
       </Layout>
-
 
       <Layout>
         <Sider width={200} style={{ background: colorBgContainer }} className="bg-gray-200 h-screen flex flex-col justify-between overflow-y-auto">
@@ -120,34 +106,23 @@ const RestProfile = () => {
               </div>
             </div>
           )}
-
         </Sider>
 
-
-        <Content
-          style={{
-            padding: '0 24px',
-            minHeight: 280,
-          }}
-        >
+        <Content style={{ padding: '0 24px', minHeight: 280 }}>
           <Tabs className="flex justify-center content-center" activeKey={activeTab} onChange={handleTabChange}>
             <>
               <TabPane tab="Home" key="1">
                 <Home />
               </TabPane>
-              <TabPane tab="Live Orders" key="2">
-                <LiveOrder />
+              <TabPane tab={`Live Orders (${liveOrderCount})`} key="2">
+                <LiveOrder onOrderDelete={handleOrderDelete} />
               </TabPane>
-              <TabPane tab="Pending Orders" key="3"></TabPane>
+              {/* <TabPane tab="Pending Orders" key="3"></TabPane> */}
               <TabPane tab="Completed Orders" key="4"></TabPane>
             </>
           </Tabs>
-
         </Content>
-
-
       </Layout>
-
     </Layout>
   );
 };

@@ -6,7 +6,7 @@ const PartnerWithFoodApp = () => {
   const navigate = useNavigate();
 
   const handleSubmit = (event) => {
-    navigate('/become-a-seller')
+    navigate('/restaurant-registration')
   }
   const handleLogin = (event) => {
     navigate('/restaurant-login')

@@ -28,7 +28,9 @@ app.use('/uploads', express.static('uploads'));
 app.use('/api', restRegistration);
 app.use('/api', restLogin)
 app.use('/api', restProfile)
+//save order in db
 app.use('/api', orderRouter)
+
 
 
 
