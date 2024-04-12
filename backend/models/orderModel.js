@@ -1,38 +1,37 @@
 import mongoose from 'mongoose';
 
 const orderSchema = new mongoose.Schema({
+    orderId: {
+        type: String,
+        required: true,
+    },
+
     dishName: {
         type: String,
         required: true,
     },
 
     quantity: {
-        type: number,
+        type: Number,
+        required: true,
+    },
+
+    shippingAddress: {
+        type: String,
         required: true,
     },
 
     totalPrice: {
-        type: number,
+        type: Number,
         required: true,
     },
+},
+    {
+        timestamps: true,
+    }
 
-    orderDateTime: {
-        type: Date,
-        default: Date.now
-    },
 
-    status: {
-        type: String,
-        enum: ['pending', 'accepted', 'completed'],
-        default: 'pending'
-    },
-
-    userId: {
-        type: String,
-        required: true,
-    },
-
-});
+);
 
 const orderModel = mongoose.model('Order', orderSchema);
 

@@ -1,32 +1,68 @@
 import express from 'express';
-import dotenv from 'dotenv';
-
+import orderModel from '../models/orderModel.js'
+import authMiddleware from '../middlewares/authMiddleware.js'
 
 const router = express.Router();
 
-
-router.get('/orders/pending', async (req, res) => {
+router.post('/order', authMiddleware, async (req, res) => {
     try {
-        const pendingOrders = await Order.find({ status: 'pending' });
-        res.json(pendingOrders);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
+
+        // const { orderId, dishName, quantity, shippingAddress, totalPrice } = req.body;
+
+        console.log("req body :", req.body)
+        const order = new orderModel(req.body);
+
+        await order.save();
+        return res.status(200).send({
+            success: true,
+            message: "Order placed successfully",
+            data: order
+        })
+
+    } catch (error) {
+        console.log("error in catch block")
+        return res.status(400).send({
+
+            message: error.message,
+            success: false,
+
+
+        })
     }
 });
 
-// Route to update order status to accepted or completed
-router.put('/orders/:id', async (req, res) => {
+
+// fetch the orders
+router.get('/order', authMiddleware, async (req, res) => {
     try {
-        const order = await Order.findById(req.params.id);
-        if (req.body.status) {
-            order.status = req.body.status;
-        }
-        const updatedOrder = await order.save();
-        res.json(updatedOrder);
-    } catch (err) {
-        res.status(400).json({ message: err.message });
+        const orders = await orderModel.find();
+        return res.status(200).send({
+            success: true,
+            message: "Orders fetched successfully",
+            data: orders
+        })
+
+
+    } catch (error) {
+        return res.send({
+            success: false,
+            message: error.message,
+
+        })
+
     }
 });
+
 
 export default router;
 
+
+//
+
+// {
+//     "orderId": "ORD12345",
+//     "dishName": "Pizza Margherita",
+//     "quantity": 1,
+//     "shippingAddress" : "Pune",
+//     "totalPrice": 12
+// }

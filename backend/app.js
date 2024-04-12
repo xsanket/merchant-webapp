@@ -20,7 +20,7 @@ app.use(cors());
 dbConfig.dbConnection();
 
 
-app.use('/uploads', express.static('uploads')); // for images to be served
+app.use('/uploads', express.static('uploads')); 
 
 
 // Routes

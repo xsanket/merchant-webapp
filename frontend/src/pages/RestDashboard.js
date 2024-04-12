@@ -3,8 +3,8 @@ import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/
 import { Button, Tabs, Modal, Layout, Menu, Image, theme } from 'antd';
 import { getRestaurant } from '../apicalls/restaurantApiCall.js';
 import { useNavigate } from 'react-router-dom';
-import LiveOrder from '../components/orders/LiveOrder.js';
-import Home from '../components/orders/Home.js';
+import LiveOrder from './orders/LiveOrder.js'
+import Home from './orders/Home.js';
 import { TbLogout2 } from "react-icons/tb";
 import { LogoutOutlined } from '@ant-design/icons';
 
