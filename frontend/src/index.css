@@ -9,8 +9,13 @@ body {
   background-color: #f7f7f7;
 }
 .ant-form-item .ant-form-item-label > label {
-  color: white !important;
+  color: white ;
 }
+
+.ant-form.black-text-form .ant-form-item .ant-form-item-label > label {
+  color: black;
+}
+
 
 .container {
   max-width: 800px;

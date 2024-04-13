@@ -8,6 +8,7 @@ import Home from './orders/Home.js';
 import { TbLogout2 } from "react-icons/tb";
 import { LogoutOutlined } from '@ant-design/icons';
 import { getOrder } from '../apicalls/orderApiCall.js';
+import CompletedOrders from './orders/CompletedOrders.js';
 
 const { Header, Content, Sider } = Layout;
 const { TabPane } = Tabs;
@@ -84,12 +85,32 @@ const RestProfile = () => {
 
   return (
     <Layout>
-      <Layout>
-        <Header className="text-white" style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <div></div>
-          <TbLogout2 className='' onClick={handleLogout} style={{ fontSize: '40px' }} />
-        </Header>
-      </Layout>
+      <Header className="text-white" style={{ display: 'flex', justifyContent: 'space-between' }}>
+
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <h1 className='text-white text-4xl italic mx-auto mb-2'>Num-Num</h1>
+        </div>
+
+
+        <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+          <Tabs
+            className="max-w6xl"
+            activeKey={activeTab}
+            style={{ width: '100%', color: 'white' }}
+            onChange={handleTabChange}
+            tabBarStyle={{ margin: 'auto', color: 'white' }}
+            tabBarGutter={50}
+          >
+            <TabPane tab={<span style={{ color: 'white' }}>Home</span>} key="1" />
+            <TabPane tab={<span style={{ color: 'white' }}>{`Live Orders (${liveOrderCount})`}</span>} key="2" />
+            <TabPane tab={<span style={{ color: 'white' }}>Completed Orders</span>} key="3" />
+          </Tabs>
+        </div>
+
+        <div>
+          <TbLogout2 className='mt-6' onClick={handleLogout} style={{ fontSize: '40px' }} />
+        </div>
+      </Header>
 
       <Layout>
         <Sider width={200} style={{ background: colorBgContainer }} className="bg-gray-200 h-screen flex flex-col justify-between overflow-y-auto">
@@ -108,19 +129,10 @@ const RestProfile = () => {
           )}
         </Sider>
 
-        <Content style={{ padding: '0 24px', minHeight: 280 }}>
-          <Tabs className="flex justify-center content-center" activeKey={activeTab} onChange={handleTabChange}>
-            <>
-              <TabPane tab="Home" key="1">
-                <Home />
-              </TabPane>
-              <TabPane tab={`Live Orders (${liveOrderCount})`} key="2">
-                <LiveOrder onOrderDelete={handleOrderDelete} />
-              </TabPane>
-              {/* <TabPane tab="Pending Orders" key="3"></TabPane> */}
-              <TabPane tab="Completed Orders" key="4"></TabPane>
-            </>
-          </Tabs>
+        <Content style={{ padding: '24px', minHeight: 280 }}>
+          {activeTab === '1' && <Home />}
+          {activeTab === '2' && <LiveOrder onOrderDelete={handleOrderDelete} />}
+          {activeTab === '3' && <CompletedOrders/>}
         </Content>
       </Layout>
     </Layout>

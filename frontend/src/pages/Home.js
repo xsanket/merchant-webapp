@@ -5,7 +5,7 @@ export default function Home() {
         const navigate = useNavigate();
       
         const handleSubmit = (event) => {
-          navigate('/become-a-seller')
+          navigate('/restaurant-registration')
         }
         const handleLogin = (event) => {
           navigate('/restaurant-login')
@@ -49,7 +49,7 @@ export default function Home() {
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '50px' }}>
               <a className='rounded-md bg-blue-500  hover:bg-blue-600 text-center cursor-pointer justify-center content-center size-12' onClick={handleSubmit} style={{ width: '45%',  textDecoration: 'none', color: 'white' }}>Register Your Restaurant</a>
-              <a className=' bg-white rounded-md text-center justify-center ease-in-out hover:bg-gray-400 cursor-pointer content-center size-12' onClick={handleLogin} style={{ padding: '10px', width: '45%', textAlign: 'center', textDecoration: 'none', color: 'black' }}>Login to View Existing Restaurant</a>
+              <a className=' bg-white rounded-md text-center justify-center ease-in-out hover:bg-gray-400 cursor-pointer content-center size-12' onClick={handleLogin} style={{ padding: '10px', width: '45%', textAlign: 'center', textDecoration: 'none', color: 'black' }}>Login your Restaurant</a>
             </div>
             <p style={{ color: '#fff' }}>Need help? Contact +91 97-16-16-16-16</p>
           </div>

@@ -1,6 +1,7 @@
-import React from 'react';
-import { Button, Form, Modal, Upload, message } from 'antd';
+import React, { useState } from 'react';
+import { Button, Form, Input, Modal, Upload, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
+import { saveMenu } from '../../apicalls/menuApiCall';
 
 const { Item } = Form;
 
@@ -11,6 +12,8 @@ function MenuForm({ open, setOpen, reloadData }) {
         headers: {
             authorization: 'authorization-text',
         },
+
+
         onChange(info) {
             if (info.file.status !== 'uploading') {
                 console.log(info.file, info.fileList);
@@ -23,19 +26,129 @@ function MenuForm({ open, setOpen, reloadData }) {
         },
     };
 
+    const [menuData, setMenuData] = useState({
+        'image': '',
+        'dishName': '',
+        'description': '',
+        'price': '',
+
+    })
+
+
+
+    const uploadImage = (event) => {
+        
+        setMenuData({
+            ...menuData,
+            image: event.target.files[0]
+        });
+    };
+
+
+
+    const [form] = Form.useForm();
+
+    const onFinish = async (values) => {
+        try {
+          const formData = new FormData();
+          formData.append('image', menuData.image);
+          formData.append('dishName', values.dishName);
+          formData.append('description', values.description);
+          formData.append('price', values.price);
+      
+          const response = await saveMenu(formData);
+          console.log(response);
+      
+          if (response.message === 'Menu saved successfully') {
+            message.success('Menu added successfully');
+            setOpen(false);
+            // reloadData();
+        
+          } else {
+            message.error('Failed to add menu');
+          }
+        } catch (error) {
+          message.error('Error adding menu: ' + error.message);
+        }
+      };
+
+    const onCancel = () => {
+        setOpen(false);
+    };
+
+
     return (
         <Modal
             title="Add Menu"
-            visible={open} // Changed prop from "open" to "visible"
-            onCancel={() => setOpen(false)}
+            open={open}
+            onCancel={onCancel}
             centered
-            footer={null} // Hide the default footer
+            footer={null}
         >
-            <Form layout='vertical'>
+            <Form
+                form={form}
+                layout="vertical"
+                onFinish={onFinish}
+                className="black-text-form"
+            >
+                <Item
+                    name="image"
+                    label="Image"
+
+
+                    rules={[{ required: true, message: 'Please upload an image!' }]}
+                >
+                    {/* <Upload
+                        name="image"
+                        action="/upload"
+                        listType="picture"
+                    >
+                        <Button icon={<UploadOutlined />}>Upload Image</Button>
+                    </Upload> */}
+                    <div className="w-full md:w-1/2 px-2 mb-2">
+                        <Form.Item name="image" label="dish image"
+                            labelCol={{ span: 24 }} wrapperCol={{ span: 24 }} labelStyle={{ color: 'white' }}
+                            rules={[{ required: true, message: 'Please upload your dish image.' }]}>
+                            <Input type="file" className="border border-gray-400 p-2 w-full" onChange={(e) => setMenuData({ ...menuData, image: e.target.files[0] })} />
+
+                        </Form.Item>
+                    </div>
+
+
+
+                </Item>
+
+
+                <Item
+                    name="dishName"
+                    label="Dish Name"
+                    rules={[{ required: true, message: 'Please enter the dish name!' }]}
+                >
+                    <Input />
+                </Item>
+                <Item
+                    name="description"
+                    label="Description"
+                    rules={[{ required: true, message: 'Please enter the description!' }]}
+                >
+                    <Input.TextArea />
+                </Item>
+                {/* <Item
+                    name="restaurantName"
+                    label="Restaurant Name"
+                    rules={[{ required: true, message: 'Please enter the restaurant name!' }]}
+                >
+                    <Input />
+                </Item> */}
+                <Item
+                    name="price"
+                    label="Price"
+                    rules={[{ required: true, message: 'Please enter the price!' }]}
+                >
+                    <Input />
+                </Item>
                 <Item>
-                    <Upload {...props}>
-                        <Button icon={<UploadOutlined />}>Click to Upload</Button> {/* Fixed typo: Butto -> Button */}
-                    </Upload>
+                    <Button type="primary" htmlType="submit">Add Menu</Button>
                 </Item>
             </Form>
         </Modal>

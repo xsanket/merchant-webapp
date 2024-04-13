@@ -84,7 +84,7 @@ function LiveOrder({ onOrderDelete }) {
     setIsModalVisible(false);
     setSelectedOrder(null);
     setDeliveryCharges(0);
-    // Additional logic for accepting and paying delivery charges
+    
   };
 
   const calculateDeliveryCharges = (totalPrice) => {
@@ -120,7 +120,7 @@ function LiveOrder({ onOrderDelete }) {
 
       <Modal
         title="Payment and Confirmation"
-        visible={isModalVisible}
+        open={isModalVisible}
         onCancel={handleCancelButton}
         onOk={handleModalOk}
         okText={`Pay ₹ ${deliveryCharges}`}

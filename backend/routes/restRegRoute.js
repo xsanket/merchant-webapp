@@ -10,7 +10,7 @@ router.post('/restaurant-registration', upload.single('profilePicture'), async (
   try {
     const profilePicture = (req.file) ? req.file.filename : null;
     const { name, email, phoneNumber, ownerName, category, location, latitude, longitude, cuisine, fassaiCode, password } = req.body;
-    console.log("email is: ", email)
+    
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -33,7 +33,7 @@ router.post('/restaurant-registration', upload.single('profilePicture'), async (
         message: "Phone Number Already Exists"
       })
     }
-    // fsssai  code is unique or not
+    // fssai  code is unique or not
     const fssaiCodeExist = await restaurantModel.findOne({ fassaiCode });
     if (fssaiCodeExist) {
       return res.status(400).json({
