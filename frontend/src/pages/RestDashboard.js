@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Tabs, Modal, Layout, Menu, Image, theme } from 'antd';
+import { Button, Tabs, Modal, Layout, Menu, Image, theme, message } from 'antd';
 import { getRestaurant } from '../apicalls/restaurantApiCall.js';
 import { useNavigate } from 'react-router-dom';
 import LiveOrder from './orders/LiveOrder.js';
@@ -10,6 +10,9 @@ import { LogoutOutlined } from '@ant-design/icons';
 import { getOrder } from '../apicalls/orderApiCall.js';
 import CompletedOrders from './orders/CompletedOrders.js';
 import { FaLocationDot } from "react-icons/fa6";
+import io from 'socket.io-client';
+import 'react-notifications/lib/notifications.css';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 
 
 
@@ -19,9 +22,6 @@ const { TabPane } = Tabs;
 
 const IMAGE_URL = 'http://localhost:5000/uploads/';
 
-const items2 = [UserOutlined, LaptopOutlined, NotificationOutlined].map((icon, index) => {
-  // ... (rest of the code)
-});
 
 const RestProfile = () => {
   const [imagePath, setImagePath] = useState('');
@@ -31,6 +31,10 @@ const RestProfile = () => {
   const [activeTab, setActiveTab] = useState('1');
   const [liveOrderCount, setLiveOrderCount] = useState(0);
   const { token: { colorBgContainer, borderRadiusLG } } = theme.useToken();
+
+
+
+
 
   useEffect(() => {
     const fetchRestaurantProfile = async () => {
@@ -87,8 +91,70 @@ const RestProfile = () => {
     setLiveOrderCount(liveOrderCount - 1);
   };
 
+
+  const [orders, setOrders] = useState([]);
+  const getOrders = async () => {
+    try {
+      const response = await getOrder();
+      if (response.success) {
+        const reversedOrders = response.data.reverse();
+        setOrders(reversedOrders);
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (error) {
+      message.error(error.message);
+    }
+  };
+
+
+  const [socket, setSocket] = useState(null);
+
+  useEffect(() => {
+    const newSocket = io('http://localhost:5000');
+    setSocket(newSocket);
+
+    newSocket.on('connect', () => {
+      console.log('Connected to the server');
+      getOrders();
+    });
+
+    newSocket.on('new-order', (newOrder) => {
+      showNotification(newOrder);
+    });
+
+    newSocket.on('disconnect', () => {
+      console.log('Disconnected from the server');
+    });
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, []);
+
+  const showNotification = (newOrder) => {
+    const { dishName, totalPrice, quantity } = newOrder;
+    NotificationManager.info(
+      `Quantity: ${quantity} - ${dishName} - Total Price: ₹${totalPrice}  `,
+      'New Order Received',
+      5000
+    );
+    getOrders();
+    setLiveOrderCount(liveOrderCount + 1);
+  }
+
+
+
+
+
+
+
+
+
   return (
+
     <Layout>
+      <NotificationContainer />
       <Header className="text-white" style={{ display: 'flex', justifyContent: 'space-between' }}>
 
         <div style={{ display: 'flex', alignItems: 'center' }}>

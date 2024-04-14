@@ -4,32 +4,57 @@ import authMiddleware from '../middlewares/authMiddleware.js'
 
 const router = express.Router();
 
-router.post('/order', authMiddleware, async (req, res) => {
-    try {
+// router.post('/order',  async (req, res) => {
+//     try {
 
-        // const { orderId, dishName, quantity, shippingAddress, totalPrice } = req.body;
+//         // const { orderId, dishName, quantity, shippingAddress, totalPrice } = req.body;
 
-        console.log("req body :", req.body)
-        const order = new orderModel(req.body);
+//         console.log("req body :", req.body)
+//         const order = new orderModel(req.body);
 
-        await order.save();
-        return res.status(200).send({
-            success: true,
-            message: "Order placed successfully",
-            data: order
-        })
+//         await order.save();
+//         return res.status(200).send({
+//             success: true,
+//             message: "Order placed successfully",
+//             data: order
+//         })
 
-    } catch (error) {
-        console.log("error in catch block")
-        return res.status(400).send({
+//     } catch (error) {
+//         console.log("error in catch block")
+//         return res.status(400).send({
 
-            message: error.message,
-            success: false,
+//             message: error.message,
+//             success: false,
 
 
-        })
-    }
+//         })
+//     }
+// });
+
+router.post('/order', async (req, res) => {
+  try {
+    console.log('req body :', req.body);
+    const order = new orderModel(req.body);
+    await order.save();
+
+    // Emit the "new-order" event to all connected clients
+    req.app.get('io').emit('new-order', order);
+
+    return res.status(200).send({
+      success: true,
+      message: 'Order placed successfully',
+      data: order,
+    });
+  } catch (error) {
+    console.log('error in catch block');
+    return res.status(400).send({
+      message: error.message,
+      success: false,
+    });
+  }
 });
+
+
 
 
 // fetch the orders
@@ -85,12 +110,13 @@ router.delete('/order/:orderId', authMiddleware, async (req, res) => {
 export default router;
 
 
-//
-
-// {
-//     "orderId": "ORD12345",
-//     "dishName": "Pizza Margherita",
-//     "quantity": 1,
-//     "shippingAddress" : "Pune",
-//     "totalPrice": 12
-// }
+/*
+http://localhost:3000/api/order
+ {
+     "orderId": "ORD12345",
+     "dishName": "Pizza Margherita",
+    "quantity": 1,
+     "shippingAddress" : "Pune",
+     "totalPrice": 12
+ }
+*/

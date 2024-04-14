@@ -2,12 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Table, message, Button, Modal } from 'antd';
 import { deleteOrder, getOrder } from '../../apicalls/orderApiCall';
 import moment from 'moment';
+import io from 'socket.io-client';
+import 'react-notifications/lib/notifications.css';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 
 function LiveOrder({ onOrderDelete }) {
   const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [deliveryCharges, setDeliveryCharges] = useState(0);
+  const [socket, setSocket] = useState(null);
 
   const columns = [
     {
@@ -58,7 +62,8 @@ function LiveOrder({ onOrderDelete }) {
     try {
       const response = await getOrder();
       if (response.success) {
-        setOrders(response.data);
+        const reversedOrders = response.data.reverse();
+        setOrders(reversedOrders);
       } else {
         throw new Error(response.message);
       }
@@ -84,7 +89,7 @@ function LiveOrder({ onOrderDelete }) {
     setIsModalVisible(false);
     setSelectedOrder(null);
     setDeliveryCharges(0);
-    
+
   };
 
   const calculateDeliveryCharges = (totalPrice) => {
@@ -111,11 +116,48 @@ function LiveOrder({ onOrderDelete }) {
 
 
   useEffect(() => {
+    const newSocket = io('http://localhost:5000');
+    setSocket(newSocket);
+
+    newSocket.on('connect', () => {
+      console.log('Connected to the server');
+      getOrders();
+    });
+
+    newSocket.on('new-order', (newOrder) => {
+      showNotification(newOrder);
+      setOrders([...orders, newOrder]);
+    });
+
+    newSocket.on('disconnect', () => {
+      console.log('Disconnected from the server');
+    });
     getOrders();
+    return () => {
+      newSocket.disconnect();
+    };
   }, []);
+
+  const showNotification = (newOrder) => {
+    const { dishName, totalPrice, quantity } = newOrder;
+    NotificationManager.info(
+      `Quantity: ${quantity} - ${dishName} - Total Price: ₹${totalPrice}  `,
+      'New Order Received',
+      5000
+    );
+    getOrders();
+  }
+
+
+
+
+  // useEffect(() => {
+  //   getOrders();
+  // }, []);
 
   return (
     <div>
+      <NotificationContainer />
       <Table columns={columns} dataSource={orders} />
 
       <Modal
