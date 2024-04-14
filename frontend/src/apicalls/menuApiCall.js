@@ -14,6 +14,20 @@ export const getMenu = async (payload) => {
 
 }
 
+// export const getMenu = async (restaurantEmail) => {
+//     try {
+//       const response = await axiosInstance.get(`/api/menu?restaurantEmail=${restaurantEmail}`);
+//       return response.data;
+//     } catch (error) {
+//       throw new Error(error.message || "Failed to fetch menus");
+//     }
+//   };
+
+
+
+
+
+
 export const deleteMenu = async (Id) => {
     try {
         const response = await axiosInstance("delete", `/api/delete-menu/${Id}`)

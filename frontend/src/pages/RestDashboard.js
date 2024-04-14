@@ -9,6 +9,10 @@ import { TbLogout2 } from "react-icons/tb";
 import { LogoutOutlined } from '@ant-design/icons';
 import { getOrder } from '../apicalls/orderApiCall.js';
 import CompletedOrders from './orders/CompletedOrders.js';
+import { FaLocationDot } from "react-icons/fa6";
+
+
+
 
 const { Header, Content, Sider } = Layout;
 const { TabPane } = Tabs;
@@ -117,13 +121,20 @@ const RestProfile = () => {
           {restaurant && (
             <div className="flex flex-col items-center">
               <div className="mt-0">
-                <Image width={200} src={imagePath} />
+                <Image width={200} height={300} src={imagePath} />
               </div>
               <div className="mt-4">
-                <span className="font-bold">{restaurant.name}</span>
+                <span className="font-bold text-xl">{restaurant.name.toUpperCase()}</span>
               </div>
               <div className="mt-2">
-                <span>{restaurant.location}</span>
+
+                <div className='flex'>
+                  <FaLocationDot className='flex mr-2 mt-1 z-20 text-red-600' />
+                  <span className=''>{restaurant.location.toUpperCase()}</span>
+
+                </div>
+
+
               </div>
             </div>
           )}
@@ -132,7 +143,7 @@ const RestProfile = () => {
         <Content style={{ padding: '24px', minHeight: 280 }}>
           {activeTab === '1' && <Home />}
           {activeTab === '2' && <LiveOrder onOrderDelete={handleOrderDelete} />}
-          {activeTab === '3' && <CompletedOrders/>}
+          {activeTab === '3' && <CompletedOrders />}
         </Content>
       </Layout>
     </Layout>

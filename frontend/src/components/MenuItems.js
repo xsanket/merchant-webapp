@@ -7,7 +7,7 @@ function MenuItems({ id, menu, onDelete }) {
   const handleDelete = async (id) => {
     try {
       await deleteMenu(id);
-      onDelete(id); // Call the onDelete callback with the deleted ID
+      onDelete(id);
       message.success("menu deleted successfully");
     } catch (error) {
       if (error.response && error.response.status === 404) {
@@ -32,7 +32,7 @@ function MenuItems({ id, menu, onDelete }) {
           <p className="text-md font-bold">₹ {menu.price}</p>
           {onDelete && (
             <FaTrash
-              className="absolute bottom-5 right-4 h-[14px] cursor-pointer text-red-500 z-99"
+              className="absolute bottom-5 right-4 h-[14px] cursor-pointer text-red-500 z-99 hover:scale-150 transition-scale duration-200 ease-in"
               onClick={() => handleDelete(id)}
             />
           )}

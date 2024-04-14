@@ -12,7 +12,10 @@ function Home() {
     try {
       const response = await getMenu();
       console.log('response == ', response);
-      const fetchedMenus = response.data;
+      const fetchedMenus = response.data.sort((a, b) => {
+        // Sort in descending order based on _id (assumed to be timestamp-based ObjectID)
+        return b._id.localeCompare(a._id);
+      });
       console.log('fetchedMenus == ', fetchedMenus);
       setMenus(fetchedMenus);
     } catch (error) {

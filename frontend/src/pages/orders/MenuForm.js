@@ -62,7 +62,7 @@ function MenuForm({ open, setOpen, reloadData }) {
           if (response.message === 'Menu saved successfully') {
             message.success('Menu added successfully');
             setOpen(false);
-            // reloadData();
+            reloadData();
         
           } else {
             message.error('Failed to add menu');
@@ -93,20 +93,12 @@ function MenuForm({ open, setOpen, reloadData }) {
             >
                 <Item
                     name="image"
-                    label="Image"
-
-
+                    label=""
                     rules={[{ required: true, message: 'Please upload an image!' }]}
                 >
-                    {/* <Upload
-                        name="image"
-                        action="/upload"
-                        listType="picture"
-                    >
-                        <Button icon={<UploadOutlined />}>Upload Image</Button>
-                    </Upload> */}
+                   
                     <div className="w-full md:w-1/2 px-2 mb-2">
-                        <Form.Item name="image" label="dish image"
+                        <Form.Item name="image" label="Dish image"
                             labelCol={{ span: 24 }} wrapperCol={{ span: 24 }} labelStyle={{ color: 'white' }}
                             rules={[{ required: true, message: 'Please upload your dish image.' }]}>
                             <Input type="file" className="border border-gray-400 p-2 w-full" onChange={(e) => setMenuData({ ...menuData, image: e.target.files[0] })} />
