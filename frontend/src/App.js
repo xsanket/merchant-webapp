@@ -9,16 +9,6 @@ import ProtectedPages from './components/ProtectedPages.js';
 
 import Dashboard from './pages/orderDashboard.js';
 
-// import dotenv from 'dotenv';
-// dotenv.config();
-
-
-//dotenv.config('../.env')
-
-
-
-
-
 const App = () => {
   return (
     <Router>

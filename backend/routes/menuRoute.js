@@ -2,6 +2,7 @@ import express from 'express';
 import authMiddleware from '../middlewares/authMiddleware.js'
 import menuUpload from '../middlewares/menuMulterMiddleware.js';
 import menuModel from '../models/menuModel.js';
+import { ObjectId } from 'mongodb';
 
 const router = express.Router();
 
@@ -46,6 +47,43 @@ router.get('/get-menu', async (rec, res) => {
         })
     }
 })
+
+
+
+router.delete('/delete-menu/:_id', async (req, res) => {
+    try {
+      const { _id } = req.params;
+      let objectId;
+
+      if (ObjectId.isValid(_id)) {
+        objectId = new ObjectId(_id);
+      } else {
+        return res.status(400).send({
+          success: false,
+          message: 'Invalid ID format',
+        });
+      }
+  
+      const deleteMenu = await menuModel.deleteOne({ _id: objectId });
+  
+      if (deleteMenu.deletedCount === 1) {
+        return res.status(200).send({
+          success: true,
+          message: 'Menu deleted successfully',
+          data: deleteMenu,
+        });
+      } else {
+        return res.status(404).send({
+          success: false,
+          message: 'Failed to delete menu',
+        });
+      }
+    } catch (error) {
+      return res.status(500).send({
+        message: error.message,
+      });
+    }
+  });
 
 
 
