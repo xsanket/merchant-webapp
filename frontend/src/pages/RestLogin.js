@@ -10,6 +10,7 @@ const RestLogin = () => {
   const [error, setError] = useState('');
 
   const navigate = useNavigate();
+  
 
   // Function to handle form submission
   const handleSubmit = async (e) => {
@@ -38,9 +39,10 @@ const RestLogin = () => {
   };
 
   useEffect(() => {
-    if (localStorage.getItem('token')) {
+    const token = localStorage.getItem('token');
+    if (token) {
+      message.success("You are already logged in.");
       navigate("/restaurant-dashboard")
-      message.success( "You are already logged in." );
     }
   }, []);
 

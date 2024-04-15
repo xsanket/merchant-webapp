@@ -166,9 +166,7 @@ const RestRegistration = () => {
   };
 
   useEffect(() => {
-    if (localStorage.getItem('token')) {
-      navigate("/restaurant-dashboard")
-    }
+    
   }, []);
 
 

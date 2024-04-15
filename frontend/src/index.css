@@ -49,3 +49,9 @@ input, textarea {
 .TbLogout2 {
   font-size: 50px;
 }
+
+.cancel-order-modal .ant-modal-content {
+  border: 2px solid #ff4d4f; 
+}
+
+

@@ -110,13 +110,26 @@ const RestProfile = () => {
 
   const [socket, setSocket] = useState(null);
 
+
+
+  const showNotification = (newOrder) => {
+    const { dishName, totalPrice, quantity } = newOrder;
+    NotificationManager.info(
+      `Quantity: ${quantity} - ${dishName} - Total Price: ₹${totalPrice}`,
+      'New Order Received',
+      5000
+    );
+
+    setOrders([newOrder, ...orders]);
+    setLiveOrderCount((prevCount) => prevCount + 1);
+  };
+
   useEffect(() => {
     const newSocket = io('http://localhost:5000');
     setSocket(newSocket);
 
     newSocket.on('connect', () => {
       console.log('Connected to the server');
-      getOrders();
     });
 
     newSocket.on('new-order', (newOrder) => {
@@ -131,19 +144,6 @@ const RestProfile = () => {
       newSocket.disconnect();
     };
   }, []);
-
-  const showNotification = (newOrder) => {
-    const { dishName, totalPrice, quantity } = newOrder;
-    NotificationManager.info(
-      `Quantity: ${quantity} - ${dishName} - Total Price: ₹${totalPrice}  `,
-      'New Order Received',
-      5000
-    );
-    getOrders();
-    setLiveOrderCount(liveOrderCount + 1);
-  }
-
-
 
 
 
@@ -208,7 +208,14 @@ const RestProfile = () => {
 
         <Content style={{ padding: '24px', minHeight: 280 }}>
           {activeTab === '1' && <Home />}
-          {activeTab === '2' && <LiveOrder onOrderDelete={handleOrderDelete} />}
+          {activeTab === '2' && (
+            <LiveOrder
+              onOrderDelete={handleOrderDelete}
+              showNotification={showNotification}
+              liveOrderCount={liveOrderCount}
+            />
+          )}
+          {/* {activeTab === '2' && <LiveOrder onOrderDelete={handleOrderDelete} />} */}
           {activeTab === '3' && <CompletedOrders />}
         </Content>
       </Layout>

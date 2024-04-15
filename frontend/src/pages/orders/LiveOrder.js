@@ -11,6 +11,9 @@ function LiveOrder({ onOrderDelete }) {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [deliveryCharges, setDeliveryCharges] = useState(0);
+  const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
+  const [cancelOrder, setCancelOrder] = useState(null);
+  const [isConfirmCancelModalVisible, setIsConfirmCancelModalVisible] = useState(false);
   const [socket, setSocket] = useState(null);
 
   const columns = [
@@ -50,13 +53,19 @@ function LiveOrder({ onOrderDelete }) {
           <Button type="primary" onClick={() => handleAcceptOrder(record.orderId)}>
             Accept
           </Button>
-          <Button danger onClick={() => handleCancelOrder(record.orderId)}>
+          <Button danger onClick={() => handleCancelOrder(record.orderId, record)} confirm={{
+            title: 'Are you sure want to cancel order?',
+            onOk: () => setIsConfirmCancelModalVisible(true),
+          }}>
             Cancel
           </Button>
         </div>
       ),
     },
   ];
+
+
+
 
   const getOrders = async () => {
     try {
@@ -99,10 +108,16 @@ function LiveOrder({ onOrderDelete }) {
 
 
   // delete the order
-  const handleCancelOrder = async (orderId) => {
+  const handleCancelOrder = async (orderId, order) => {
+    setCancelOrder(order);
+    setIsConfirmCancelModalVisible(true);
+  };
+
+  const handleConfirmCancelOrder = async () => {
+    setIsConfirmCancelModalVisible(false);
     try {
-      await deleteOrder(orderId);
-      setOrders(orders.filter((order) => order.orderId !== orderId));
+      await deleteOrder(cancelOrder.orderId);
+      setOrders(orders.filter((order) => order.orderId !== cancelOrder.orderId));
       onOrderDelete();
       message.success('Order canceled successfully');
     } catch (error) {
@@ -112,6 +127,11 @@ function LiveOrder({ onOrderDelete }) {
         message.error('Failed to cancel order');
       }
     }
+  };
+
+  const handleCancelConfirmCancelOrder = () => {
+    setIsConfirmCancelModalVisible(false);
+    setCancelOrder(null);
   };
 
 
@@ -125,8 +145,9 @@ function LiveOrder({ onOrderDelete }) {
     });
 
     newSocket.on('new-order', (newOrder) => {
-      showNotification(newOrder);
+      // showNotification(newOrder);
       setOrders([...orders, newOrder]);
+      getOrders();
     });
 
     newSocket.on('disconnect', () => {
@@ -177,6 +198,27 @@ function LiveOrder({ onOrderDelete }) {
           </>
         )}
       </Modal>
+
+      <Modal
+        title="Are you sure want to cancel order?"
+        open={isConfirmCancelModalVisible}
+        onOk={handleConfirmCancelOrder}
+        onCancel={handleCancelConfirmCancelOrder}
+        className="cancel-order-modal"
+        centered
+      >
+        {cancelOrder && (
+          <>
+            <p className='text-sm'>
+              Order Id: {cancelOrder.orderId}
+            </p>
+            <p>
+              Total Price: ₹{cancelOrder.totalPrice}
+            </p>
+          </>
+        )}
+      </Modal>
+
     </div>
   );
 }
