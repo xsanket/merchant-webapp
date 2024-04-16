@@ -158,7 +158,7 @@ const RestProfile = () => {
       <Header className="text-white" style={{ display: 'flex', justifyContent: 'space-between' }}>
 
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <h1 className='text-white text-4xl italic mx-auto mb-2'>Num-Num</h1>
+          <h1 className='text-white text-4xl italic mx-auto mb-2 cursor-pointer'  onClick={() => navigate('/restaurant-dashboard')}>Num-Num</h1>
         </div>
 
 

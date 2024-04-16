@@ -203,6 +203,7 @@ function LiveOrder({ onOrderDelete }) {
         title="Are you sure want to cancel order?"
         open={isConfirmCancelModalVisible}
         onOk={handleConfirmCancelOrder}
+        okText={"Yes"}
         onCancel={handleCancelConfirmCancelOrder}
         className="cancel-order-modal"
         centered
