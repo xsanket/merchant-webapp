@@ -11,13 +11,14 @@ router.post('/menu', menuUpload.single('image'), async (req, res) => {
     try {
         const image = req.file.filename;
         console.log('req.body:', req.body);
-        const { dishName, description, price } = req.body;
+        const { dishName, description, price, email } = req.body;
 
         const menu = new menuModel({
             image,
             dishName,
             description,
             price,
+            email,
         });
 
         const savedMenu = await menu.save();
@@ -33,20 +34,30 @@ router.post('/menu', menuUpload.single('image'), async (req, res) => {
     }
 });
 
-router.get('/get-menu', async (rec, res) => {
-    try {
-        const menus = await menuModel.find();
-        res.send({
-            message: 'Menus fetched successfully',
-            data: menus
-        });
 
-    } catch (error) {
-        return res.send({
-            message: error.message,
-        })
-    }
-})
+
+router.get('/get-menu', async (req, res) => {
+  try {
+      const email = req.query.email;
+      if (!email) {
+          return res.status(400).send({
+              message: 'Email parameter is required.',
+          });
+      }
+
+      const menus = await menuModel.find({ email });
+
+      res.send({
+          message: 'Menus fetched successfully',
+          data: menus,
+      });
+  } catch (error) {
+      return res.status(500).send({
+          message: error.message,
+      });
+  }
+});
+
 
 
 

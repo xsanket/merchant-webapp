@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Form, Input, Modal, Upload, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { saveMenu } from '../../apicalls/menuApiCall';
 
 const { Item } = Form;
 
-function MenuForm({ open, setOpen, reloadData }) {
+function MenuForm({ open, setOpen, reloadData, email }) {
     const props = {
         name: 'file',
         action: 'https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload',
@@ -31,13 +31,14 @@ function MenuForm({ open, setOpen, reloadData }) {
         'dishName': '',
         'description': '',
         'price': '',
+        'email': email || '',
 
     })
 
 
 
     const uploadImage = (event) => {
-        
+
         setMenuData({
             ...menuData,
             image: event.target.files[0]
@@ -48,29 +49,41 @@ function MenuForm({ open, setOpen, reloadData }) {
 
     const [form] = Form.useForm();
 
+    useEffect(() => {
+        setMenuData((prevData) => ({
+            ...prevData,
+            email: email || '',
+        }));
+    }, [email]);
+
+
+
+
     const onFinish = async (values) => {
         try {
-          const formData = new FormData();
-          formData.append('image', menuData.image);
-          formData.append('dishName', values.dishName);
-          formData.append('description', values.description);
-          formData.append('price', values.price);
-      
-          const response = await saveMenu(formData);
-          console.log(response);
-      
-          if (response.message === 'Menu saved successfully') {
-            message.success('Menu added successfully');
-            setOpen(false);
-            reloadData();
-        
-          } else {
-            message.error('Failed to add menu');
-          }
+            const formData = new FormData();
+            formData.append('image', menuData.image);
+            formData.append('dishName', values.dishName);
+            formData.append('description', values.description);
+            formData.append('price', values.price);
+            formData.append('email', menuData.email);
+
+
+            const response = await saveMenu(formData);
+            console.log(response);
+
+            if (response.message === 'Menu saved successfully') {
+                message.success('Menu added successfully');
+                setOpen(false);
+                reloadData();
+
+            } else {
+                message.error('Failed to add menu');
+            }
         } catch (error) {
-          message.error('Error adding menu: ' + error.message);
+            message.error('Error adding menu: ' + error.message);
         }
-      };
+    };
 
     const onCancel = () => {
         setOpen(false);
@@ -94,10 +107,10 @@ function MenuForm({ open, setOpen, reloadData }) {
                 <Item
                     name="image"
                     label=""
-                    rules={[{ required: true, message: 'Please upload an image!' }]}
+                    
                 >
-                   
-                    <div className="w-full md:w-1/2 px-2 mb-2">
+
+                    <div className="">
                         <Form.Item name="image" label="Dish image"
                             labelCol={{ span: 24 }} wrapperCol={{ span: 24 }} labelStyle={{ color: 'white' }}
                             rules={[{ required: true, message: 'Please upload your dish image.' }]}>
@@ -125,13 +138,6 @@ function MenuForm({ open, setOpen, reloadData }) {
                 >
                     <Input.TextArea />
                 </Item>
-                {/* <Item
-                    name="restaurantName"
-                    label="Restaurant Name"
-                    rules={[{ required: true, message: 'Please enter the restaurant name!' }]}
-                >
-                    <Input />
-                </Item> */}
                 <Item
                     name="price"
                     label="Price"
@@ -139,6 +145,17 @@ function MenuForm({ open, setOpen, reloadData }) {
                 >
                     <Input />
                 </Item>
+
+                <Item
+                    name="email"
+                    label="Restaurant Email"
+                   
+                >
+                    <Input defaultValue={menuData.email} readOnly />
+                </Item>
+
+
+
                 <Item>
                     <Button type="primary" htmlType="submit">Add Menu</Button>
                 </Item>

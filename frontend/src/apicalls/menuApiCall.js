@@ -8,8 +8,8 @@ export const saveMenu = async (payload) => {
 }
 
 
-export const getMenu = async (payload) => {
-    const response = await axiosInstance("get", '/api/get-menu', payload)
+export const getMenu = async (email) => {
+    const response = await axiosInstance("get", `/api/get-menu?email=${email}`);      
     return response;
 
 }

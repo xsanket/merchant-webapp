@@ -211,7 +211,7 @@ const RestProfile = () => {
         </Sider>
 
         <Content style={{ padding: '24px', minHeight: 280 }}>
-          {activeTab === '1' && <Home />}
+        {activeTab === '1' && <Home email={restaurant?.email} />}
           {activeTab === '2' && (
             <LiveOrder
               onOrderDelete={handleOrderDelete}

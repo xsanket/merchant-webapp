@@ -4,28 +4,24 @@ import MenuForm from './MenuForm.js';
 import { getMenu, deleteMenu } from '../../apicalls/menuApiCall.js';
 import MenuItems from '../../components/MenuItems.js';
 
-function Home() {
+function Home({ email }) {
   const [open, setOpen] = useState(false);
   const [menus, setMenus] = useState([]);
 
   const fetchAndSetMenus = async () => {
     try {
-      const response = await getMenu();
-      console.log('response == ', response);
-      const fetchedMenus = response.data.sort((a, b) => {
-        //descending orders
-        return b._id.localeCompare(a._id);
-      });
-      console.log('fetchedMenus == ', fetchedMenus);
+      const response = await getMenu(email);
+      const fetchedMenus = response.data.sort((a, b) => b._id.localeCompare(a._id));
       setMenus(fetchedMenus);
     } catch (error) {
       console.error('Error fetching menus:', error.message);
     }
   };
 
+
   useEffect(() => {
     fetchAndSetMenus();
-  }, []);
+  }, [fetchAndSetMenus]);
 
   const reloadData = () => {
     fetchAndSetMenus();
@@ -53,7 +49,8 @@ function Home() {
           </Button>
         </div>
       </div>
-      {open && <MenuForm open={open} setOpen={setOpen} reloadData={reloadData} />}
+      {open && <MenuForm open={open} setOpen={setOpen} reloadData={reloadData} email={email} />}
+      {/* {open && <MenuForm open={open} setOpen={setOpen} reloadData={reloadData} />} */}
       <div className="max-w-6xl px-3 mt-6 mx-auto">
         {menus.length > 0 ? (
           <ul className=" gap-8 cursor-pointer sm:grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4">
