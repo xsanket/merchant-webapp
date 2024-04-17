@@ -41,4 +41,6 @@
     transform: rotate(360deg);
   }
 }
-
+.ant-layout {
+  height: calc(100vh - 64px);
+}

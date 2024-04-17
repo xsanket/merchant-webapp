@@ -54,4 +54,7 @@ input, textarea {
   border: 2px solid #ff4d4f; 
 }
 
+.ant-layout {
+  height: calc(100vh - 64px);
+}
 

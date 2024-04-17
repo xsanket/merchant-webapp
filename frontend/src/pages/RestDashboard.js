@@ -13,6 +13,7 @@ import { FaLocationDot } from "react-icons/fa6";
 import io from 'socket.io-client';
 import 'react-notifications/lib/notifications.css';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
+import { FaFacebook, FaLinkedin } from "react-icons/fa";
 
 
 
@@ -159,10 +160,10 @@ const RestProfile = () => {
 
     <Layout>
       <NotificationContainer />
-      <Header className="text-white" style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <Header className="text-white"  style={{ display: 'flex', justifyContent: 'space-between' }}>
 
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <h1 className='text-white text-4xl italic mx-auto mb-2 cursor-pointer'  onClick={() => navigate('/restaurant-dashboard')}>Num-Num</h1>
+          <h1 className='text-white text-4xl italic mx-auto mb-2 cursor-pointer' onClick={() => navigate('/restaurant-dashboard')}>Num-Num</h1>
         </div>
 
 
@@ -187,31 +188,58 @@ const RestProfile = () => {
       </Header>
 
       <Layout>
-        <Sider width={200} style={{ background: colorBgContainer }} className="bg-gray-200 h-screen flex flex-col justify-between overflow-y-auto">
-          {restaurant && (
-            <div className="flex flex-col items-center">
-              <div className="mt-0">
-                <Image width={200} height={300} src={imagePath} />
-              </div>
-              <div className="mt-4">
-                <span className="font-bold text-xl">{restaurant.name.toUpperCase()}</span>
-              </div>
-              <div className="mt-2">
 
-                <div className='flex'>
-                  <FaLocationDot className='flex mr-2 mt-1 z-20 text-red-600' />
-                  <span className=''>{restaurant.location.toUpperCase()}</span>
-
+        <Sider width={250}  style={{ background: colorBgContainer }} className="bg-gray-200  h-[100vh] min-h-[120vh] flex flex-col justify-between">
+          <div className="flex flex-col items-center">
+            {restaurant && (
+              <>
+                <div className="mt-6 mb-4">
+                  <Image width={170} height={170} src={imagePath} className="rounded-full border-4 border-green" />
                 </div>
+                <div className="mt-4">
+                  <span className="font-bold text-xl">{restaurant.name.toUpperCase()}</span>
+                </div>
+                <div className="mt-2">
+                  <div className='flex'>
+                    <FaLocationDot className='mr-2 mt-1 text-red-600' />
+                    <span>{restaurant.location.toUpperCase()}</span>
+                  </div>
+                </div>
+              </>
+            )}
 
 
+            <div ></div>
+
+
+            <div style={{ background: colorBgContainer }}
+              className=" absolute bottom-0  w-full bg-white mb-8  justify-between  flex flex-col items-center"
+            >
+              <div className="text-sm text-center">
+                <span>Connect with us:</span>
+                {restaurant && <div>Email: {restaurant.email}</div>}
+              </div>
+              <div className="flex items-center mt-2">
+                <a href="#" target="_blank" rel="noopener noreferrer" className="mr-4">
+                  <FaLinkedin className="text-blue-600 text-xl" />
+                </a>
+                <a href="#" target="_blank" rel="noopener noreferrer">
+                  <FaFacebook className="text-blue-800 text-xl" />
+                </a>
+              </div>
+              <div className="mt-2 text-xs text-gray-600">
+                &copy; {new Date().getFullYear()} Num-Num. All rights reserved.
               </div>
             </div>
-          )}
+          </div>
         </Sider>
 
+
+
+
+
         <Content style={{ padding: '24px', minHeight: 280 }}>
-        {activeTab === '1' && <Home email={restaurant?.email} />}
+          {activeTab === '1' && <Home email={restaurant?.email} />}
           {activeTab === '2' && (
             <LiveOrder
               onOrderDelete={handleOrderDelete}
