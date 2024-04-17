@@ -124,6 +124,10 @@ const RestProfile = () => {
     setLiveOrderCount((prevCount) => prevCount + 1);
   };
 
+  const handleOrderAccept = () => {
+    setLiveOrderCount((prevCount) => prevCount + 1);
+  };
+
   useEffect(() => {
     const newSocket = io('http://localhost:5000');
     setSocket(newSocket);
@@ -211,6 +215,7 @@ const RestProfile = () => {
           {activeTab === '2' && (
             <LiveOrder
               onOrderDelete={handleOrderDelete}
+              onOrderAccept={handleOrderAccept}
               showNotification={showNotification}
               liveOrderCount={liveOrderCount}
             />

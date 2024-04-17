@@ -7,6 +7,8 @@ import restLogin from './routes/restLoginRoute.js';
 import restProfile from './routes/restProfile.js';
 import orderRouter from './routes/orderRoute.js';
 import menuRoute from './routes/menuRoute.js';
+import transactionRoute from './routes/transactionRoute.js'
+import completedOrders from './routes/completedOrders.js'
 import http from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 
@@ -16,7 +18,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new SocketIOServer(server, {
   cors: {
-    origin: 'http://localhost:3000', 
+    origin: 'http://localhost:3000',
     allowedHeaders: ['content-type'],
   },
 });
@@ -42,6 +44,14 @@ app.use('/api', restLogin);
 app.use('/api', restProfile);
 app.use('/api', orderRouter);
 app.use('/api', menuRoute);
+app.use('/api', transactionRoute);
+
+app.use('/api', completedOrders);
+
+
+
+
+
 
 io.on('connection', (socket) => {
   console.log('A user connected');

@@ -5,6 +5,7 @@ import moment from 'moment';
 import io from 'socket.io-client';
 import 'react-notifications/lib/notifications.css';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
+import { orderTransaction } from '../../apicalls/transactionApiCall';
 
 function LiveOrder({ onOrderDelete }) {
   const [orders, setOrders] = useState([]);
@@ -170,11 +171,37 @@ function LiveOrder({ onOrderDelete }) {
   }
 
 
+  const handlePay = async (order) => {
+    try {
+      const deliveryCharges = (order.totalPrice * 0.1).toFixed(2);
+      const response = await orderTransaction({
+        transactionId: order.orderId,
+        name: order.dishName,
+        amount: deliveryCharges,
+        phone: "1234567890",
+      });
+
+      if (response.data.instrumentResponse && response.data.instrumentResponse.redirectInfo) {
+
+        window.open(response.data.instrumentResponse.redirectInfo.url, '_blank');
+        await deleteOrder(order.orderId);
+        setOrders(orders.filter((ord) => ord.orderId !== order.orderId));
+        getOrders();
+        
+        setIsModalVisible(false);
+        setSelectedOrder(null);
+      } else {
+        message.error("Error processing the payment");
+      }
+    } catch (error) {
+      message.error("Error processing the payment");
+    }
+  };
 
 
-  // useEffect(() => {
-  //   getOrders();
-  // }, []);
+
+
+
 
   return (
     <div>
@@ -185,7 +212,7 @@ function LiveOrder({ onOrderDelete }) {
         title="Payment and Confirmation"
         open={isModalVisible}
         onCancel={handleCancelButton}
-        onOk={handleModalOk}
+        onOk={() => handlePay(selectedOrder)}
         okText={`Pay ₹ ${deliveryCharges}`}
         cancelText="Cancel"
         centered

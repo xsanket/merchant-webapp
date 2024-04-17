@@ -4,33 +4,6 @@ import authMiddleware from '../middlewares/authMiddleware.js'
 
 const router = express.Router();
 
-// router.post('/order',  async (req, res) => {
-//     try {
-
-//         // const { orderId, dishName, quantity, shippingAddress, totalPrice } = req.body;
-
-//         console.log("req body :", req.body)
-//         const order = new orderModel(req.body);
-
-//         await order.save();
-//         return res.status(200).send({
-//             success: true,
-//             message: "Order placed successfully",
-//             data: order
-//         })
-
-//     } catch (error) {
-//         console.log("error in catch block")
-//         return res.status(400).send({
-
-//             message: error.message,
-//             success: false,
-
-
-//         })
-//     }
-// });
-
 router.post('/order', async (req, res) => {
   try {
     console.log('req body :', req.body);
