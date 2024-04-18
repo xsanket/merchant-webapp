@@ -38,7 +38,7 @@ function MenuItems({ id, menu, onDelete }) {
         </div>
         {onDelete && (
           <FaTrash
-            className="absolute bottom-5 right-4 h-[14px] cursor-pointer text-red-500 z-99 hover:scale-150 transition-scale duration-200 ease-in"
+            className="absolute bottom-5 right-4 h-[14px] cursor-pointer text-red-500 z-40 hover:scale-150 transition-scale duration-200 ease-in"
             onClick={() => handleDelete(id)}
           />
         )}

@@ -2,22 +2,27 @@ import React, { useEffect, useState } from 'react';
 import { restaurantLogin } from '../apicalls/restaurantApiCall.js';
 import { useNavigate } from 'react-router-dom';
 import { message } from 'antd';
+import { useDispatch } from 'react-redux';
+import { setLoading } from '../redux/loaderSlice.js';
+
+// Login page for restaurant
 
 const RestLogin = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  
+
 
   // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      dispatch(setLoading(true))
       const response = await restaurantLogin({ email, password });
-      console.log(response)
+      dispatch(setLoading(false))
       if (response.success) {
         localStorage.setItem('token', response.token);
         message.success("Logged in successfully!");
@@ -34,6 +39,7 @@ const RestLogin = () => {
       }
     }
     catch (err) {
+      dispatch(setLoading(false))
       setError('Internal server error');
     }
   };

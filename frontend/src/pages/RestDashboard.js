@@ -14,7 +14,8 @@ import io from 'socket.io-client';
 import 'react-notifications/lib/notifications.css';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import { FaFacebook, FaLinkedin } from "react-icons/fa";
-
+import { useDispatch } from 'react-redux';
+import { setLoading } from '../redux/loaderSlice.js';
 
 
 
@@ -32,6 +33,7 @@ const RestProfile = () => {
   const [activeTab, setActiveTab] = useState('1');
   const [liveOrderCount, setLiveOrderCount] = useState(0);
   const { token: { colorBgContainer, borderRadiusLG } } = theme.useToken();
+  const dispatch = useDispatch();
 
 
 
@@ -40,7 +42,9 @@ const RestProfile = () => {
   useEffect(() => {
     const fetchRestaurantProfile = async () => {
       try {
+        dispatch(setLoading(true))
         const restaurantData = await getRestaurant();
+        dispatch(setLoading(false));
         console.log('Restaurant Data:', restaurantData);
         if (restaurantData && restaurantData.data) {
           setImagePath(`${IMAGE_URL}${restaurantData.data.profilePicture}`);
@@ -51,6 +55,7 @@ const RestProfile = () => {
           console.error('Invalid restaurant data:', restaurantData);
         }
       } catch (error) {
+        dispatch(setLoading(false));
         console.error('Error fetching restaurant profile:', error);
       }
     };
@@ -96,7 +101,9 @@ const RestProfile = () => {
   const [orders, setOrders] = useState([]);
   const getOrders = async () => {
     try {
+      dispatch(setLoading(true));
       const response = await getOrder();
+      dispatch(setLoading(false));
       if (response.success) {
         const reversedOrders = response.data.reverse();
         setOrders(reversedOrders);
@@ -104,6 +111,7 @@ const RestProfile = () => {
         throw new Error(response.message);
       }
     } catch (error) {
+      dispatch(setLoading(false));
       message.error(error.message);
     }
   };
@@ -220,10 +228,10 @@ const RestProfile = () => {
                 {restaurant && <div>Email: {restaurant.email}</div>}
               </div>
               <div className="flex items-center mt-2">
-                <a href="#" target="_blank" rel="noopener noreferrer" className="mr-4">
+                <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" className="mr-4">
                   <FaLinkedin className="text-blue-600 text-xl" />
                 </a>
-                <a href="#" target="_blank" rel="noopener noreferrer">
+                <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">
                   <FaFacebook className="text-blue-800 text-xl" />
                 </a>
               </div>

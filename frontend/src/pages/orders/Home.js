@@ -3,17 +3,21 @@ import { Button, Layout, Modal } from 'antd';
 import MenuForm from './MenuForm.js';
 import { getMenu, deleteMenu } from '../../apicalls/menuApiCall.js';
 import MenuItems from '../../components/MenuItems.js';
+import { useDispatch } from 'react-redux';
+import { setLoading } from '../../redux/loaderSlice.js';
 
 function Home({ email }) {
   const [open, setOpen] = useState(false);
   const [menus, setMenus] = useState([]);
+  const dispatch = useDispatch();
 
   const fetchAndSetMenus = async () => {
     try {
-      const response = await getMenu(email);
+      const response = await getMenu(email); 
       const fetchedMenus = response.data.sort((a, b) => b._id.localeCompare(a._id));
       setMenus(fetchedMenus);
     } catch (error) {
+      
       console.error('Error fetching menus:', error.message);
     }
   };
@@ -29,7 +33,9 @@ function Home({ email }) {
 
   const handleDelete = async (id) => {
     try {
+     
       await deleteMenu(id);
+      
       setMenus(menus.filter((menu) => menu._id !== id));
       console.log('Menu deleted successfully');
     } catch (error) {

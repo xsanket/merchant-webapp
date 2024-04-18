@@ -4,18 +4,25 @@ import OrderList from '../components/OrderList';
 import OrderModal from '../components/OrderModal';
 import { getOrderDashboard } from '../apicalls/restaurantApiCall.js'
 
+import { setLoading } from '../redux/loaderSlice.js';
+
+
 const Dashboard = () => {
     const [orders, setOrders] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
 
+
     const fetchOrders = async (status) => {
         try {
             //const response = await fetch(`/api/orders/${status}`);
+            
             const response = await getOrderDashboard({status});
+            
             const data = await response.json();
             setOrders(data);
         } catch (err) {
+            
             console.error(err);
         }
     };

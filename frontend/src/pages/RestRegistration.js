@@ -2,12 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { restaurantRegistration } from '../apicalls/restaurantApiCall';
 import { useNavigate } from 'react-router-dom';
 import { message, Form, Input, Button, Select, Radio, InputNumber } from 'antd';
+import { useDispatch } from 'react-redux';
+import { setLoading } from '../redux/loaderSlice';
 
 const { Option } = Select;
 
 const RestRegistration = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
+  const dispatch = useDispatch();
 
   const [restData, setRestData] = useState({
     profilePicture: '',
@@ -121,6 +124,7 @@ const RestRegistration = () => {
       const formData = new FormData();
 
 
+
       formData.append('profilePicture', restData.profilePicture);
       formData.append('name', restData.name);
       formData.append('email', restData.email);
@@ -139,8 +143,9 @@ const RestRegistration = () => {
       console.log('Rest Data:', JSON.stringify(restData));
 
 
-
+      dispatch(setLoading(true));
       const response = await restaurantRegistration(formData);
+      dispatch(setLoading(false));
       console.log('API Response:', response); // Log the API response
 
       if (response.success) {
@@ -161,12 +166,13 @@ const RestRegistration = () => {
       }
     } catch (error) {
       console.log('Error in Registration', error);
+      dispatch(setLoading(false));
       message.error('Registration failed. Please try again.');
     }
   };
 
   useEffect(() => {
-    
+
   }, []);
 
 

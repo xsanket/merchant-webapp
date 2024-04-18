@@ -6,6 +6,8 @@ import io from 'socket.io-client';
 import 'react-notifications/lib/notifications.css';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import { orderTransaction } from '../../apicalls/transactionApiCall';
+import { useDispatch } from 'react-redux';
+import { setLoading } from '../../redux/loaderSlice';
 
 function LiveOrder({ onOrderDelete }) {
   const [orders, setOrders] = useState([]);
@@ -16,6 +18,7 @@ function LiveOrder({ onOrderDelete }) {
   const [cancelOrder, setCancelOrder] = useState(null);
   const [isConfirmCancelModalVisible, setIsConfirmCancelModalVisible] = useState(false);
   const [socket, setSocket] = useState(null);
+  const dispatch = useDispatch()
 
   const columns = [
     {
@@ -70,7 +73,9 @@ function LiveOrder({ onOrderDelete }) {
 
   const getOrders = async () => {
     try {
+      dispatch(setLoading(true));
       const response = await getOrder();
+      dispatch(setLoading(false));
       if (response.success) {
         const reversedOrders = response.data.reverse();
         setOrders(reversedOrders);
@@ -78,6 +83,7 @@ function LiveOrder({ onOrderDelete }) {
         throw new Error(response.message);
       }
     } catch (error) {
+      dispatch(setLoading(false));
       message.error(error.message);
     }
   };
@@ -117,11 +123,14 @@ function LiveOrder({ onOrderDelete }) {
   const handleConfirmCancelOrder = async () => {
     setIsConfirmCancelModalVisible(false);
     try {
+      dispatch(setLoading(true));
       await deleteOrder(cancelOrder.orderId);
+      dispatch(setLoading(false));
       setOrders(orders.filter((order) => order.orderId !== cancelOrder.orderId));
       onOrderDelete();
       message.success('Order canceled successfully');
     } catch (error) {
+      dispatch(setLoading(false));
       if (error.response && error.response.status === 404) {
         message.error('Order not found');
       } else {
@@ -174,6 +183,7 @@ function LiveOrder({ onOrderDelete }) {
   const handlePay = async (order) => {
     try {
       const deliveryCharges = (order.totalPrice * 0.1).toFixed(2);
+      
       const response = await orderTransaction({
         transactionId: order.orderId,
         name: order.dishName,
@@ -187,7 +197,7 @@ function LiveOrder({ onOrderDelete }) {
         await deleteOrder(order.orderId);
         setOrders(orders.filter((ord) => ord.orderId !== order.orderId));
         getOrders();
-        
+
         setIsModalVisible(false);
         setSelectedOrder(null);
       } else {

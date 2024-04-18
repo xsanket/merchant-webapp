@@ -2,16 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { Table, message } from 'antd';
 import { getCompletedOrders } from '../../apicalls/completedOrdersApiCall';
 import moment from 'moment';
+import { useDispatch } from 'react-redux';
+import { setLoading } from '../../redux/loaderSlice';
 
 function CompletedOrders() {
   const [completedOrders, setCompletedOrders] = useState([]);
-
+  const dispatch = useDispatch();
   const columns = [
     {
       title: "Dish Name",
       dataIndex: "name",
     },
-    
+
     {
       title: "Transaction Id",
       dataIndex: "merchantTransactionId",
@@ -41,7 +43,9 @@ function CompletedOrders() {
 
   const getCompletedOrdersData = async () => {
     try {
+      dispatch(setLoading(true))
       const response = await getCompletedOrders();
+      dispatch(setLoading(false))
       if (response.success) {
         const reversedOrders = response.data.reverse();
         setCompletedOrders(reversedOrders);
@@ -49,6 +53,7 @@ function CompletedOrders() {
         throw new Error(response.message);
       }
     } catch (error) {
+      dispatch(setLoading(false))
       message.error(error.message);
     }
   };

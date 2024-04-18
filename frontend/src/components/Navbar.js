@@ -13,7 +13,7 @@ export default function Navbar() {
 
 
     return (
-        <div className='bg-red-400 border-b shadow-sm sticky top-0 z-50'>
+        <div className='bg-red-400 border-b shadow-sm sticky top-0 z-40'>
             <header className='flex justify-between px-3 max-w-6xl mx-auto'>
                 <div className='py-3'>
                     <img src='/logo.png' alt='Img food app'
