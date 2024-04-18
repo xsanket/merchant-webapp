@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Layout, Modal } from 'antd';
+import { Button, Empty, Layout, Modal } from 'antd';
 import MenuForm from './MenuForm.js';
 import { getMenu, deleteMenu } from '../../apicalls/menuApiCall.js';
 import MenuItems from '../../components/MenuItems.js';
 import { useDispatch } from 'react-redux';
 import { setLoading } from '../../redux/loaderSlice.js';
+
 
 function Home({ email }) {
   const [open, setOpen] = useState(false);
@@ -13,11 +14,11 @@ function Home({ email }) {
 
   const fetchAndSetMenus = async () => {
     try {
-      const response = await getMenu(email); 
+      const response = await getMenu(email);
       const fetchedMenus = response.data.sort((a, b) => b._id.localeCompare(a._id));
       setMenus(fetchedMenus);
     } catch (error) {
-      
+
       console.error('Error fetching menus:', error.message);
     }
   };
@@ -29,13 +30,12 @@ function Home({ email }) {
 
   const reloadData = () => {
     fetchAndSetMenus();
+
   };
 
   const handleDelete = async (id) => {
     try {
-     
       await deleteMenu(id);
-      
       setMenus(menus.filter((menu) => menu._id !== id));
       console.log('Menu deleted successfully');
     } catch (error) {
@@ -65,7 +65,9 @@ function Home({ email }) {
             ))}
           </ul>
         ) : (
-          <div>No menus available.</div>
+          <div style={{ position: 'absolute', top: '50%', left: '55%', transform: 'translate(-50%, -50%)' }}>
+            <Empty />
+          </div>
         )}
       </div>
     </div>

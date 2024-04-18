@@ -16,6 +16,7 @@ import { NotificationContainer, NotificationManager } from 'react-notifications'
 import { FaFacebook, FaLinkedin } from "react-icons/fa";
 import { useDispatch } from 'react-redux';
 import { setLoading } from '../redux/loaderSlice.js';
+import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 
 
 
@@ -34,8 +35,6 @@ const RestProfile = () => {
   const [liveOrderCount, setLiveOrderCount] = useState(0);
   const { token: { colorBgContainer, borderRadiusLG } } = theme.useToken();
   const dispatch = useDispatch();
-
-
 
 
 
@@ -61,6 +60,8 @@ const RestProfile = () => {
     };
     fetchRestaurantProfile();
   }, []);
+
+
 
   const handleViewOrders = (status) => {
     navigate(`/orders/${status}`);
@@ -99,28 +100,15 @@ const RestProfile = () => {
 
 
   const [orders, setOrders] = useState([]);
-  const getOrders = async () => {
-    try {
-      dispatch(setLoading(true));
-      const response = await getOrder();
-      dispatch(setLoading(false));
-      if (response.success) {
-        const reversedOrders = response.data.reverse();
-        setOrders(reversedOrders);
-      } else {
-        throw new Error(response.message);
-      }
-    } catch (error) {
-      dispatch(setLoading(false));
-      message.error(error.message);
-    }
-  };
+
+
+
+
+
+
 
 
   const [socket, setSocket] = useState(null);
-
-
-
   const showNotification = (newOrder) => {
     const { dishName, totalPrice, quantity } = newOrder;
     NotificationManager.info(
@@ -160,15 +148,11 @@ const RestProfile = () => {
 
 
 
-
-
-
-
   return (
 
     <Layout>
       <NotificationContainer />
-      <Header className="text-white"  style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <Header className="text-white" style={{ display: 'flex', justifyContent: 'space-between' }}>
 
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <h1 className='text-white text-4xl italic mx-auto mb-2 cursor-pointer' onClick={() => navigate('/restaurant-dashboard')}>Num-Num</h1>
@@ -191,13 +175,14 @@ const RestProfile = () => {
         </div>
 
         <div>
+
           <TbLogout2 className='mt-6' onClick={handleLogout} style={{ fontSize: '40px' }} />
         </div>
       </Header>
 
       <Layout>
 
-        <Sider width={250}  style={{ background: colorBgContainer }} className="bg-gray-200  h-[100vh] min-h-[120vh] flex flex-col justify-between">
+        <Sider width={250} style={{ background: colorBgContainer }} className="bg-gray-200  h-[100vh] min-h-[120vh] flex flex-col justify-between">
           <div className="flex flex-col items-center">
             {restaurant && (
               <>
@@ -206,6 +191,7 @@ const RestProfile = () => {
                 </div>
                 <div className="mt-4">
                   <span className="font-bold text-xl">{restaurant.name.toUpperCase()}</span>
+                  
                 </div>
                 <div className="mt-2">
                   <div className='flex'>
@@ -217,7 +203,32 @@ const RestProfile = () => {
             )}
 
 
-            <div ></div>
+            
+
+              <div className=' border-4 border-green w-full h-[100px] lg:h-[300px] z-10 overflow-auto mt-8 mb-4'>
+                {restaurant && (
+                  <MapContainer
+                  
+                    center={restaurant?.latitude ? [restaurant.latitude, restaurant.longitude] : [0, 0]}
+                    zoom={13}
+                    scrollWheelZoom={false}
+                    style={{height: "100%" , width: "100%"}}
+                  >
+                    <TileLayer
+                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+                    <Marker position={[restaurant.latitude, restaurant.longitude]}>
+                      <Popup>
+                        A pretty CSS3 popup. <br /> Easily customizable.
+                      </Popup>
+                    </Marker>
+                  </MapContainer>
+                )}
+              </div>
+
+
+         
 
 
             <div style={{ background: colorBgContainer }}
