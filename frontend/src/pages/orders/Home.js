@@ -7,30 +7,35 @@ import { useDispatch } from 'react-redux';
 import { setLoading } from '../../redux/loaderSlice.js';
 
 
+const fetchAndSetMenus = async (email, setMenus) => {
+  try {
+    
+    const response = await getMenu(email);
+    console.log("response in fetchandsetMenus", response)
+    const fetchedMenus = response.data.sort((a, b) => b._id.localeCompare(a._id));
+    setMenus(fetchedMenus);
+  } catch (error) {
+    console.error('Error fetching menus:', error.message);
+  }
+};
+
+
+
+
+
 function Home({ email }) {
   const [open, setOpen] = useState(false);
   const [menus, setMenus] = useState([]);
   const dispatch = useDispatch();
 
-  const fetchAndSetMenus = async () => {
-    try {
-      const response = await getMenu(email);
-      const fetchedMenus = response.data.sort((a, b) => b._id.localeCompare(a._id));
-      setMenus(fetchedMenus);
-    } catch (error) {
-
-      console.error('Error fetching menus:', error.message);
-    }
-  };
-
-
   useEffect(() => {
-    fetchAndSetMenus();
-  }, [fetchAndSetMenus]);
+    fetchAndSetMenus(email, setMenus);
+    console.log("response in useEffect")
+  }, [email]);
 
   const reloadData = () => {
-    fetchAndSetMenus();
-
+    fetchAndSetMenus(email, setMenus);
+    console.log("response in reloadData")
   };
 
   const handleDelete = async (id) => {
@@ -42,7 +47,6 @@ function Home({ email }) {
       console.error('Error deleting menu:', error.message);
     }
   };
-
   return (
     <div>
       <div className="flex justify-between items-center mb-6">

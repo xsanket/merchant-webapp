@@ -129,6 +129,7 @@ function LiveOrder({ onOrderDelete }) {
       setOrders(orders.filter((order) => order.orderId !== cancelOrder.orderId));
       onOrderDelete();
       message.success('Order canceled successfully');
+       getOrders();
     } catch (error) {
       dispatch(setLoading(false));
       if (error.response && error.response.status === 404) {

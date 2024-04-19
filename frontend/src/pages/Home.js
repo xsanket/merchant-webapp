@@ -37,21 +37,21 @@ export default function Home() {
                 <Link to="/restaurant-login" style={{ textDecoration: 'none', color: 'white' }}>Login</Link>
               </li>
               <li className='rounded-md bg-blue-500' style={{ margin: '0 10px', border: '1px solid #fff', padding: '5px 10px',  }}>
-                <Link to="/become-a-seller" style={{ textDecoration: 'none', color: 'white' }}>Create Account</Link>
+                <Link to="/restaurant-registration" style={{ textDecoration: 'none', color: 'white' }}>Create Account</Link>
               </li>
             </ul>
           </nav>
         </div>
         <div style={{ margin: '25px 200px 30px', textAlign: 'left', padding: '0' }}>
-          <p style={{ color: '#fff' }}>Partner with Num-Num <br></br>
-            at 0% commission for the 1st month! <br></br><br></br>
-            And get ads worth INR 1500. Valid for new restaurant partners in select cities.</p>
+          <p className='text-2xl' style={{ color: '#fff' }}>Partner with Num-Num <br></br>
+            at 0% commission for the 1st month!</p> <br/>
+           <p className='text-white'> And get ads worth INR 1500. Valid for new restaurant partners in select cities.</p>
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '50px' }}>
               <a className='rounded-md bg-blue-500  hover:bg-blue-600 text-center cursor-pointer justify-center content-center size-12' onClick={handleSubmit} style={{ width: '45%',  textDecoration: 'none', color: 'white' }}>Register Your Restaurant</a>
               <a className=' bg-white rounded-md text-center justify-center ease-in-out hover:bg-gray-400 cursor-pointer content-center size-12' onClick={handleLogin} style={{ padding: '10px', width: '45%', textAlign: 'center', textDecoration: 'none', color: 'black' }}>Login your Restaurant</a>
             </div>
-            <p style={{ color: '#fff' }}>Need help? Contact +91 97-16-16-16-16</p>
+            <p className='mt-4' style={{ color: '#fff' }}>Need help? Contact +91 97-16-16-16-16</p>
           </div>
         </div>
 

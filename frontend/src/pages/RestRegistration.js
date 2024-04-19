@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { restaurantRegistration } from '../apicalls/restaurantApiCall';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { message, Form, Input, Button, Select, Radio, InputNumber } from 'antd';
 import { useDispatch } from 'react-redux';
 import { setLoading } from '../redux/loaderSlice';
@@ -182,7 +182,7 @@ const RestRegistration = () => {
     <div className="bg-black text-white min-h-screen  flex flex-col justify-center items-center relative" style={{ backgroundImage: 'url(/bg.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
       <div className="container mx-auto px-4 ">
         <div className="flex flex-col items-center  ">
-          <h1 className="text-4xl font-bold ">Register your Restaurant</h1>
+          <h1 className="text-4xl font-bold ">Register your restaurant</h1>
           <span className="text-sm font-light text-black mt-2">Partner with us</span>
         </div>
 
@@ -352,10 +352,13 @@ const RestRegistration = () => {
             <Button
               type="primary"
               htmlType="submit"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex justify-center items-center mx-auto"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex justify-center items-center mx-auto "
             >
               Register
             </Button>
+            <span className='mt-1 flex text-center justify-center text-white'>
+              Already have an account? Login here <Link to="/restaurant-login" className="text-blue-500 ml-1 mb-0">Login</Link>
+            </span>
           </Form.Item>
         </Form>
       </div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { restaurantLogin } from '../apicalls/restaurantApiCall.js';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { message } from 'antd';
 import { useDispatch } from 'react-redux';
 import { setLoading } from '../redux/loaderSlice.js';
@@ -63,7 +63,7 @@ const RestLogin = () => {
     >
       <div className="container mx-auto px-4">
         <div className="flex flex-col items-center ">
-          <h1 className="text-4xl font-bold ">Login your Restaurant</h1>
+          <h1 className="text-4xl font-bold ">Login your restaurant</h1>
           <span className="text-sm font-light">for business</span>
         </div>
 
@@ -97,15 +97,24 @@ const RestLogin = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="border border-gray-400 p-2 w-full"
+
             />
           </div>
 
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          >
-            Login
-          </button>
+          <div style={{ display: 'grid', placeItems: 'center' }}>
+            <button
+              type="submit"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded justify-center content-center text-center"
+            >
+              Login
+            </button>
+            <span className='mt-1 flex text-center justify-center text-white'>
+              New user? Register here <Link to="/restaurant-registration" className="text-blue-500 ml-1 mb-0">Register</Link>
+            </span>
+          </div>
+
+
+
         </form>
       </div>
     </div>

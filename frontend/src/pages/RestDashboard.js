@@ -191,7 +191,7 @@ const RestProfile = () => {
                 </div>
                 <div className="mt-4">
                   <span className="font-bold text-xl">{restaurant.name.toUpperCase()}</span>
-                  
+
                 </div>
                 <div className="mt-2">
                   <div className='flex'>
@@ -203,32 +203,32 @@ const RestProfile = () => {
             )}
 
 
-            
-
-              <div className=' border-4 border-green w-full h-[100px] lg:h-[300px] z-10 overflow-auto mt-8 mb-4'>
-                {restaurant && (
-                  <MapContainer
-                  
-                    center={restaurant?.latitude ? [restaurant.latitude, restaurant.longitude] : [0, 0]}
-                    zoom={13}
-                    scrollWheelZoom={false}
-                    style={{height: "100%" , width: "100%"}}
-                  >
-                    <TileLayer
-                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    />
-                    <Marker position={[restaurant.latitude, restaurant.longitude]}>
-                      <Popup>
-                        A pretty CSS3 popup. <br /> Easily customizable.
-                      </Popup>
-                    </Marker>
-                  </MapContainer>
-                )}
-              </div>
 
 
-         
+            <div className=' border-4 border-green w-full h-[300px] lg:h-[300px] z-10 overflow-auto mt-8 mb-4'>
+              {restaurant && (
+                <MapContainer
+
+                  center={restaurant?.latitude ? [restaurant.latitude, restaurant.longitude] : [0, 0]}
+                  zoom={13}
+                  scrollWheelZoom={false}
+                  style={{ height: "100%", width: "100%" }}
+                >
+                  <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  />
+                  <Marker position={[restaurant.latitude, restaurant.longitude]}>
+                    <Popup  >
+                     {[restaurant.name]} <br/> {[restaurant.location]}
+                    </Popup>
+                  </Marker>
+                </MapContainer>
+              )}
+            </div>
+
+
+
 
 
             <div style={{ background: colorBgContainer }}
