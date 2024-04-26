@@ -8,13 +8,14 @@ const router = express.Router();
 
 router.post('/transaction-order', async (req, res) => {
     try {
-      const { transactionId, name, amount, phone } = req.body;
+      const { transactionId, email, name, amount, phone } = req.body;
       const merchantTransactionId = uuidv4();
   
       const data = {
         merchantId: process.env.MERCHANT_ID,
         merchantTransactionId,
         name,
+        email : email,
         amount: amount * 100,
         currency: 'INR',
         //redirectUrl: `http://localhost:8000/status?id=${merchantTransactionId}`,
@@ -24,6 +25,7 @@ router.post('/transaction-order', async (req, res) => {
           type: 'PAY_PAGE',
         },
       };
+      console.log("data of transaction =>>>>>>>>>>>>>", data)
   
       const payload = JSON.stringify(data);
       const payloadMain = Buffer.from(payload).toString('base64');
@@ -54,6 +56,7 @@ router.post('/transaction-order', async (req, res) => {
           name,
           amount,
           status: 'completed',
+          email ,
         });
         await transaction.save();
         return res.json(response.data);

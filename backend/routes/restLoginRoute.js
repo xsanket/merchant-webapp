@@ -30,7 +30,7 @@ router.post('/restaurant-login', async (req, res) => {
       }
   
       // if password valid gen a jwt token
-      const token = jwt.sign({ userId: user._id }, process.env.jwt_secret, { expiresIn: '7d' });
+      const token = jwt.sign({ userId: user._id }, process.env.jwt_secret, { expiresIn: '1d' });
   
       // Send the token in the response
       res.status(200).json({ success: true, token });

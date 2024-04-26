@@ -48,8 +48,13 @@ const RestProfile = () => {
         if (restaurantData && restaurantData.data) {
           setImagePath(`${IMAGE_URL}${restaurantData.data.profilePicture}`);
           setRestaurant(restaurantData.data);
-          const response = await getOrder();
+          const response = await getOrder(restaurantData.data.email);
+          //console.log("wow-----------",`?email=${restaurantData.data.email}`)
           setLiveOrderCount(response.data.length);
+          //console.log("set live order count is =================", response.data.length)  
+          // handleOrderCountChange(6);
+
+
         } else {
           console.error('Invalid restaurant data:', restaurantData);
         }
@@ -60,7 +65,6 @@ const RestProfile = () => {
     };
     fetchRestaurantProfile();
   }, []);
-
 
 
   const handleViewOrders = (status) => {
@@ -96,6 +100,7 @@ const RestProfile = () => {
 
   const handleOrderDelete = () => {
     setLiveOrderCount(liveOrderCount - 1);
+
   };
 
 
@@ -118,11 +123,13 @@ const RestProfile = () => {
     );
 
     setOrders([newOrder, ...orders]);
-    setLiveOrderCount((prevCount) => prevCount + 1);
+    handleOrderCountChange(1);
+    // setLiveOrderCount((prevCount) => prevCount + 1);
   };
 
   const handleOrderAccept = () => {
-    setLiveOrderCount((prevCount) => prevCount + 1);
+    setLiveOrderCount((prevCount) => prevCount - 1);
+
   };
 
   useEffect(() => {
@@ -145,6 +152,24 @@ const RestProfile = () => {
       newSocket.disconnect();
     };
   }, []);
+
+
+  useEffect(() => {
+    const fetchLiveOrderCount = async () => {
+      try {
+        const response = await getOrder(`?email=${restaurant?.email}`);
+        setLiveOrderCount(response.data.length);
+      } catch (error) {
+        console.error('Error fetching live order count:', error);
+      }
+    };
+
+    fetchLiveOrderCount();
+  }, [restaurant?.email]);
+
+  const handleOrderCountChange = (change) => {
+    setLiveOrderCount((prevCount) => prevCount + change);
+  };
 
 
 
@@ -220,7 +245,7 @@ const RestProfile = () => {
                   />
                   <Marker position={[restaurant.latitude, restaurant.longitude]}>
                     <Popup  >
-                     {[restaurant.name]} <br/> {[restaurant.location]}
+                      {[restaurant.name]} <br /> {[restaurant.location]}
                     </Popup>
                   </Marker>
                 </MapContainer>
@@ -261,6 +286,7 @@ const RestProfile = () => {
           {activeTab === '1' && <Home email={restaurant?.email} />}
           {activeTab === '2' && (
             <LiveOrder
+              email={restaurant?.email}
               onOrderDelete={handleOrderDelete}
               onOrderAccept={handleOrderAccept}
               showNotification={showNotification}
@@ -268,7 +294,11 @@ const RestProfile = () => {
             />
           )}
           {/* {activeTab === '2' && <LiveOrder onOrderDelete={handleOrderDelete} />} */}
-          {activeTab === '3' && <CompletedOrders />}
+          {activeTab === '3' && <CompletedOrders
+            email={restaurant?.email}
+
+
+          />}
         </Content>
       </Layout>
     </Layout>

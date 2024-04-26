@@ -1,8 +1,8 @@
 import { axiosInstance } from "./apicall.js";
 
 //fetch live order
-export const getOrder = async () => {
-    const response = axiosInstance("get", "/api/order");
+export const getOrder = async (email) => {
+    const response = axiosInstance("get", `/api/order?email=${email}`);
     return response;
 }
 //Delete live order

@@ -33,7 +33,9 @@ router.post('/order', async (req, res) => {
 // fetch the orders
 router.get('/order', authMiddleware, async (req, res) => {
     try {
-        const orders = await orderModel.find();
+      const email = req.query.email; 
+      const orders = await orderModel.find({ email });
+        
         return res.status(200).send({
             success: true,
             message: "Orders fetched successfully",

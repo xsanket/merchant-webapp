@@ -6,7 +6,9 @@ const router = express.Router();
 
 router.get('/completed-order', authMiddleware, async (req, res) => {
     try {
-        const orders = await TransactionModel.find();
+        const email = req.query.email; 
+        console.log("email is ===> ",email)
+        const orders = await TransactionModel.find({ email });
         return res.status(200).send({
             success: true,
             message: "Orders fetched successfully",

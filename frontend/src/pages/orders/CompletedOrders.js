@@ -5,7 +5,7 @@ import moment from 'moment';
 import { useDispatch } from 'react-redux';
 import { setLoading } from '../../redux/loaderSlice';
 
-function CompletedOrders() {
+function CompletedOrders({ email }) {
   const [completedOrders, setCompletedOrders] = useState([]);
   const dispatch = useDispatch();
   const columns = [
@@ -41,10 +41,10 @@ function CompletedOrders() {
     },
   ];
 
-  const getCompletedOrdersData = async () => {
+  const getCompletedOrdersData = async (email) => {
     try {
       dispatch(setLoading(true))
-      const response = await getCompletedOrders();
+      const response = await getCompletedOrders(email);
       dispatch(setLoading(false))
       if (response.success) {
         const reversedOrders = response.data.reverse();
@@ -59,8 +59,8 @@ function CompletedOrders() {
   };
 
   useEffect(() => {
-    getCompletedOrdersData();
-  }, []);
+    getCompletedOrdersData(email);
+  }, [email]);
 
   return (
     <div>

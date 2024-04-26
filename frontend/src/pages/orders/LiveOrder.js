@@ -9,7 +9,8 @@ import { orderTransaction } from '../../apicalls/transactionApiCall';
 import { useDispatch } from 'react-redux';
 import { setLoading } from '../../redux/loaderSlice';
 
-function LiveOrder({ onOrderDelete }) {
+function LiveOrder({ onOrderDelete, onOrderAccept, email }) {
+  const [liveOrderCount, setLiveOrderCount] = useState(0);
   const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -71,14 +72,15 @@ function LiveOrder({ onOrderDelete }) {
 
 
 
-  const getOrders = async () => {
+  const getOrders = async (email) => {
     try {
       dispatch(setLoading(true));
-      const response = await getOrder();
+      const response = await getOrder(email);
       dispatch(setLoading(false));
       if (response.success) {
         const reversedOrders = response.data.reverse();
         setOrders(reversedOrders);
+        setLiveOrderCount(response.data.length);
       } else {
         throw new Error(response.message);
       }
@@ -93,6 +95,7 @@ function LiveOrder({ onOrderDelete }) {
     setSelectedOrder(order);
     setIsModalVisible(true);
     calculateDeliveryCharges(order.totalPrice);
+    setLiveOrderCount((prevCount) => prevCount - 1);
   };
 
   const handleCancelButton = () => {
@@ -129,7 +132,10 @@ function LiveOrder({ onOrderDelete }) {
       setOrders(orders.filter((order) => order.orderId !== cancelOrder.orderId));
       onOrderDelete();
       message.success('Order canceled successfully');
-       getOrders();
+      setLiveOrderCount((prevCount) => prevCount - 1);
+
+      getOrders(email);
+
     } catch (error) {
       dispatch(setLoading(false));
       if (error.response && error.response.status === 404) {
@@ -152,23 +158,23 @@ function LiveOrder({ onOrderDelete }) {
 
     newSocket.on('connect', () => {
       console.log('Connected to the server');
-      getOrders();
+      getOrders(email);
     });
 
     newSocket.on('new-order', (newOrder) => {
       // showNotification(newOrder);
       setOrders([...orders, newOrder]);
-      getOrders();
+      getOrders(email);
     });
 
     newSocket.on('disconnect', () => {
       console.log('Disconnected from the server');
     });
-    getOrders();
+    getOrders(email);
     return () => {
       newSocket.disconnect();
     };
-  }, []);
+  }, [email]);
 
   const showNotification = (newOrder) => {
     const { dishName, totalPrice, quantity } = newOrder;
@@ -177,27 +183,35 @@ function LiveOrder({ onOrderDelete }) {
       'New Order Received',
       5000
     );
-    getOrders();
+    getOrders(email);
+    setOrders([newOrder, ...orders]);
+    setLiveOrderCount((prevCount) => prevCount + 1);
   }
 
 
-  const handlePay = async (order) => {
+  // accepting orders
+  const handlePay = async (order, email, newOrder) => {
     try {
       const deliveryCharges = (order.totalPrice * 0.1).toFixed(2);
-      
+      console.log("res ======>>>>>", email)
       const response = await orderTransaction({
         transactionId: order.orderId,
         name: order.dishName,
         amount: deliveryCharges,
         phone: "1234567890",
+        email,
       });
 
-      if (response.data.instrumentResponse && response.data.instrumentResponse.redirectInfo) {
+      console.log("res ======>>>>>", response)
 
+      if (response.data.instrumentResponse && response.data.instrumentResponse.redirectInfo) {
+        onOrderAccept();
+        setLiveOrderCount((prevCount) => prevCount - 1);
         window.open(response.data.instrumentResponse.redirectInfo.url, '_blank');
         await deleteOrder(order.orderId);
+
         setOrders(orders.filter((ord) => ord.orderId !== order.orderId));
-        getOrders();
+        getOrders(email);
 
         setIsModalVisible(false);
         setSelectedOrder(null);
@@ -223,7 +237,7 @@ function LiveOrder({ onOrderDelete }) {
         title="Payment and Confirmation"
         open={isModalVisible}
         onCancel={handleCancelButton}
-        onOk={() => handlePay(selectedOrder)}
+        onOk={() => handlePay(selectedOrder, email)}
         okText={`Pay ₹ ${deliveryCharges}`}
         cancelText="Cancel"
         centered
