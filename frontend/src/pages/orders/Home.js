@@ -20,9 +20,6 @@ const fetchAndSetMenus = async (email, setMenus) => {
 };
 
 
-
-
-
 function Home({ email }) {
   const [open, setOpen] = useState(false);
   const [menus, setMenus] = useState([]);

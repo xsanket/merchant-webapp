@@ -58,3 +58,12 @@ input, textarea {
   height: calc(100vh - 64px);
 }
 
+.test-order-modal .ant-modal {
+  position: fixed;
+  top: 100px; /* Adjust the top position as needed */
+  left: 0;
+  width: 400px; /* Adjust the width as needed */
+  height: calc(100vh - 100px); /* Adjust the height as needed */
+  padding: 20px;
+  overflow-y: auto;
+}

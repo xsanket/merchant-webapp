@@ -87,11 +87,12 @@ export default router;
 
 /*
 http://localhost:3000/api/order
- {
+{
      "orderId": "ORD12345",
      "dishName": "Pizza Margherita",
     "quantity": 1,
      "shippingAddress" : "Pune",
-     "totalPrice": 12
+     "totalPrice": 12,
+    "email" : "royalhotel@gmail.com"
  }
 */

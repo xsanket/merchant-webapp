@@ -17,6 +17,7 @@ import { FaFacebook, FaLinkedin } from "react-icons/fa";
 import { useDispatch } from 'react-redux';
 import { setLoading } from '../redux/loaderSlice.js';
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
+import TestOrderForm from '../components/TestOrderForm.js';
 
 
 
@@ -35,6 +36,7 @@ const RestProfile = () => {
   const [liveOrderCount, setLiveOrderCount] = useState(0);
   const { token: { colorBgContainer, borderRadiusLG } } = theme.useToken();
   const dispatch = useDispatch();
+  const [open, setOpen] = useState(false);
 
 
 
@@ -252,6 +254,14 @@ const RestProfile = () => {
               )}
             </div>
 
+            <div className='ml-2'>
+              <Button className='' onClick={() => setOpen(true)}>
+                Test Order
+              </Button>
+            </div>
+
+
+            {open && <TestOrderForm open={open} setOpen={setOpen} email={restaurant?.email} />}
 
 
 
