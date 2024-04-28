@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { message } from 'antd';
 import { useDispatch } from 'react-redux';
 import { setLoading } from '../redux/loaderSlice.js';
+import { IoHomeSharp } from "react-icons/io5";
 
 // Login page for restaurant
 
@@ -111,6 +112,11 @@ const RestLogin = () => {
             <span className='mt-1 flex text-center justify-center text-white'>
               New user? Register here <Link to="/restaurant-registration" className="text-blue-500 ml-1 mb-0">Register</Link>
             </span>
+            <span className='mt-1 flex text-center justify-center text-white'>
+              <IoHomeSharp className='mt-1 text-blue-500  ' />
+              <Link to="/" className="text-blue-500 ml-1 mb-0">Home</Link>
+            </span>
+
           </div>
 
 

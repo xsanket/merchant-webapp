@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { message, Form, Input, Button, Select, Radio, InputNumber } from 'antd';
 import { useDispatch } from 'react-redux';
 import { setLoading } from '../redux/loaderSlice';
+import { IoHomeSharp } from "react-icons/io5";
 
 const { Option } = Select;
 
@@ -358,6 +359,10 @@ const RestRegistration = () => {
             </Button>
             <span className='mt-1 flex text-center justify-center text-white'>
               Already have an account? Login here <Link to="/restaurant-login" className="text-blue-500 ml-1 mb-0">Login</Link>
+            </span>
+            <span className='mt-1 flex text-center justify-center text-white'>
+              <IoHomeSharp className='mt-1 text-blue-500  ' />
+              <Link to="/" className="text-blue-500 ml-1 mb-0">Home</Link>
             </span>
           </Form.Item>
         </Form>
