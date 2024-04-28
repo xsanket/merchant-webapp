@@ -109,12 +109,6 @@ const RestProfile = () => {
   const [orders, setOrders] = useState([]);
 
 
-
-
-
-
-
-
   const [socket, setSocket] = useState(null);
   const showNotification = (newOrder) => {
     const { dishName, totalPrice, quantity } = newOrder;
@@ -126,7 +120,7 @@ const RestProfile = () => {
 
     setOrders([newOrder, ...orders]);
     handleOrderCountChange(1);
-    // setLiveOrderCount((prevCount) => prevCount + 1);
+    
   };
 
   const handleOrderAccept = () => {
