@@ -153,7 +153,8 @@ function LiveOrder({ onOrderDelete, onOrderAccept, email }) {
 
 
   useEffect(() => {
-    const newSocket = io('https://num-num-backend.vercel.app/');
+    const newSocket = io('http://localhost:5000');
+    
     setSocket(newSocket);
 
     newSocket.on('connect', () => {

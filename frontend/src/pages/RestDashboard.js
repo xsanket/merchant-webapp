@@ -24,7 +24,7 @@ import TestOrderForm from '../components/TestOrderForm.js';
 const { Header, Content, Sider } = Layout;
 const { TabPane } = Tabs;
 
-const IMAGE_URL = 'https://num-num-backend.vercel.app/uploads/';
+const IMAGE_URL = 'http://localhost:5000/uploads/';
 
 
 const RestProfile = () => {
@@ -129,7 +129,7 @@ const RestProfile = () => {
   };
 
   useEffect(() => {
-    const newSocket = io('https://num-num-backend.vercel.app/');
+    const newSocket = io('http://localhost:5000');
     setSocket(newSocket);
 
     newSocket.on('connect', () => {

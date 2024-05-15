@@ -18,8 +18,8 @@ router.post('/transaction-order', async (req, res) => {
         email : email,
         amount: amount * 100,
         currency: 'INR',
-        //redirectUrl: `http://localhost:8000/status?id=${merchantTransactionId}`,
-        //redirectMode: 'POST',
+        redirectUrl: `http://localhost:8000/status?id=${merchantTransactionId}`,
+        redirectMode: 'POST',
         mobileNumber: phone,
         paymentInstrument: {
           type: 'PAY_PAGE',
